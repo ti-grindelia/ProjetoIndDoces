@@ -39,7 +39,13 @@
 
                     <x-list-item :item="$user" value="name" sub-value="email" no-separator no-hover class="-mx-2 !-my-2 rounded">
                         <x-slot:actions>
-                            <x-button icon="o-power" class="btn-circle btn-ghost btn-xs" tooltip-left="logoff" no-wire-navigate link="/logout" />
+                            <div class="tooltip tooltip-left" data-tip="logoff">
+                                <x-button
+                                    icon="o-power"
+                                    class="btn-circle btn-ghost btn-xs"
+                                    @click="$dispatch('logout')">
+                                </x-button>
+                            </div>
                         </x-slot:actions>
                     </x-list-item>
 
@@ -47,7 +53,7 @@
                 @endif
 
                 <x-menu-item title="Hello" icon="o-sparkles" link="/" />
-                
+
                 <x-menu-sub title="Settings" icon="o-cog-6-tooth">
                     <x-menu-item title="Wifi" icon="o-wifi" link="####" />
                     <x-menu-item title="Archives" icon="o-archive-box" link="####" />
@@ -55,13 +61,13 @@
             </x-menu>
         </x-slot:sidebar>
 
-        {{-- The `$slot` goes here --}}
         <x-slot:content>
             {{ $slot }}
         </x-slot:content>
     </x-main>
 
-    {{--  TOAST area --}}
     <x-toast />
+
+    <livewire:autenticacao.logout />
 </body>
 </html>
