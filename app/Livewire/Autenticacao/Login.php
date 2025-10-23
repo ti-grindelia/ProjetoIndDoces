@@ -20,7 +20,7 @@ class Login extends Component
 
     public function tentarLogar(): void
     {
-        if (!Auth::attempt(['email' => $this->email, 'senha' => $this->senha])) {
+        if (!Auth::attempt(['email' => $this->email, 'password' => $this->senha])) {
 
             $this->addError('credenciaisInvalidas', 'As credenciais não correspondem aos nossos registros');
 

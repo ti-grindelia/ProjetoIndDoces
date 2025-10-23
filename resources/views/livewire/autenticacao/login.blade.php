@@ -20,7 +20,7 @@
 
             <x-slot:actions>
                 <div class="w-full flex items-center justify-between">
-                    <a href="#" wire:navigate class="link text-blue-600">
+                    <a href="{{ route('auth.registro') }}" wire:navigate class="link text-blue-600">
                         Quero criar uma conta
                     </a>
                     <div>
