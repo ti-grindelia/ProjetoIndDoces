@@ -3,6 +3,7 @@
 namespace App\Livewire\Usuario;
 
 use App\Models\Usuario;
+use Illuminate\Validation\Rule;
 use Livewire\Form as BaseForm;
 
 class Form extends BaseForm
@@ -22,11 +23,17 @@ class Form extends BaseForm
     public function rules(): array
     {
         return [
-            'nome'        => ['required', 'min:3', 'max:255'],
-            'usuarioNome' => ['required', 'min:3', 'max:255', 'unique:Usuarios,Usuario'],
-            'email'       => ['nullable', 'email', 'unique:Usuarios,Email'],
-            'senha'       => ['required', 'min:6', 'max:255'],
-            'ativo'       => ['boolean'],
+            'nome'    => ['required', 'min:3', 'max:255'],
+            'usuario' => ['required', 'min:3', 'max:255',
+                Rule::unique('Usuarios', 'Usuario')
+                    ->ignore($this->usuario?->UsuarioID, 'UsuarioID')
+            ],
+            'email'   => ['nullable', 'email',
+                Rule::unique('Usuarios', 'Email')
+                    ->ignore($this->usuario?->UsuarioID, 'UsuarioID')
+            ],
+            'senha'   => ['required', 'min:6', 'max:255'],
+            'ativo'   => ['boolean'],
         ];
     }
 
@@ -63,7 +70,6 @@ class Form extends BaseForm
         $this->usuario->Nome    = $this->nome;
         $this->usuario->Usuario = $this->usuarioNome;
         $this->usuario->Email   = $this->email;
-        $this->usuario->Senha   = $this->senha;
         $this->usuario->Ativo   = $this->ativo;
 
         $this->usuario->update();
