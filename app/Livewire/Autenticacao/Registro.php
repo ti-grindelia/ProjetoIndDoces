@@ -19,7 +19,7 @@ class Registro extends Component
     #[Rule(['nullable', 'email', 'max:255', 'unique:Usuarios,Email'])]
     public ?string $email = null;
 
-    #[Rule(['required'])]
+    #[Rule(['required', 'min:6', 'max:255'])]
     public ?string $senha = null;
 
     public bool $ativo = true;

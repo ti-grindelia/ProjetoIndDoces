@@ -76,8 +76,8 @@
 
     {{ $this->itens->links() }}
 
-{{--    <livewire:usuario.criar/>--}}
-{{--    <livewire:usuario.atualizar/>--}}
-{{--    <livewire:usuario.arquivar/>--}}
-{{--    <livewire:usuario.restaurar/>--}}
+    <livewire:usuario.criar/>
+    <livewire:usuario.atualizar/>
+    <livewire:usuario.arquivar/>
+    <livewire:usuario.restaurar/>
 </div>
