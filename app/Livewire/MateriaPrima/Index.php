@@ -42,7 +42,6 @@ class Index extends Component
                 fn(Builder $q) => $q->where('Ativo', true));
     }
 
-
     public function colunasPesquisa(): array
     {
         return ['Nome'];
