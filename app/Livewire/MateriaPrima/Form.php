@@ -15,12 +15,15 @@ class Form extends BaseForm
 
     public string $fornecedor = '';
 
+    public bool $ativo = true;
+
     public function rules(): array
     {
         return [
             'nome'       => ['required', 'min:3', 'max:255'],
             'descricao'  => ['required'],
             'fornecedor' => ['required', 'min:3', 'max:255'],
+            'ativo'      => ['boolean'],
         ];
     }
 
@@ -28,9 +31,10 @@ class Form extends BaseForm
     {
         $this->materiaPrima = $materiaPrima;
 
-        $this->nome = $materiaPrima->Nome;
-        $this->descricao = $materiaPrima->Descricao;
-        $this->fornecedor = $materiaPrima->Fornenecedor;
+        $this->nome       = $materiaPrima->Nome;
+        $this->descricao  = $materiaPrima->Descricao;
+        $this->fornecedor = $materiaPrima->Fornecedor;
+        $this->ativo      = $materiaPrima->Ativo;
     }
 
     public function criar(): void
@@ -41,8 +45,21 @@ class Form extends BaseForm
             'Nome'       => $this->nome,
             'Descricao'  => $this->descricao,
             'Fornecedor' => $this->fornecedor,
+            'Ativo'      => $this->ativo,
         ]);
 
         $this->reset();
+    }
+
+    public function atualizar(): void
+    {
+        $this->validate();
+
+        $this->materiaPrima->Nome       = $this->nome;
+        $this->materiaPrima->Descricao  = $this->descricao;
+        $this->materiaPrima->Fornecedor = $this->fornecedor;
+        $this->materiaPrima->Ativo      = $this->ativo;
+
+        $this->materiaPrima->update();
     }
 }

@@ -45,7 +45,7 @@
                 id="editar-btn-{{ $materiaPrima->MateriaPrimaID }}"
                 wire:key="editar-btn-{{ $materiaPrima->MateriaPrimaID }}"
                 icon="o-pencil"
-                @click="$dispatch('materia-prima::editar', { id: {{ $materiaPrima->MateriaPrimaID }} })"
+                @click="$dispatch('materia-prima::atualizar', { id: {{ $materiaPrima->MateriaPrimaID }} })"
                 spinner class="btn-sm btn-primary"
             />
 
@@ -73,4 +73,5 @@
     {{ $this->itens->links() }}
 
     <livewire:materia-prima.criar/>
+    <livewire:materia-prima.atualizar/>
 </div>
