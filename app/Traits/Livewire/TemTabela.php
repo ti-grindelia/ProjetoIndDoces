@@ -33,8 +33,7 @@ trait TemTabela
 
         return $query
             ->orderBy($this->ordenarPelaColuna, $this->ordenarDirecao)
-            ->paginate($this->porPagina)
-            ->withQueryString();
+            ->paginate($this->porPagina);
     }
 
     #[Computed]

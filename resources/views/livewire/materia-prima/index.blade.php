@@ -7,7 +7,7 @@
                 <x-input
                     icon="o-magnifying-glass"
                     wire:model.live="pesquisa"
-                    placeholder="Pesquise por nome e descrição"
+                    placeholder="Pesquise por nome"
                 />
             </div>
             <x-select

@@ -9,14 +9,18 @@ trait TemPesquisa
 {
     public function scopePesquisa(Builder $query, ?string $pesquisa = null, ?array $colunas = []): Builder
     {
-        return $query->when($pesquisa, function (Builder $q) use ($pesquisa, $colunas) {
-            foreach ($colunas as $coluna) {
-                $q->orWhere(
-                    DB::raw('lower(' . $coluna . ')'),
-                    'like',
-                    '%' . strtolower($pesquisa) . '%'
-                );
-            }
-        });
+        return $query
+            ->where('Ativo', true)
+            ->when($pesquisa, function (Builder $q) use ($pesquisa, $colunas) {
+                $q->where(function ($subQuery) use ($pesquisa, $colunas) {
+                    foreach ($colunas as $coluna) {
+                        $subQuery->orWhere(
+                            DB::raw('LOWER(' . $coluna . ')'),
+                            'like',
+                            '%' . strtolower($pesquisa) . '%'
+                        );
+                    }
+                });
+            });
     }
 }

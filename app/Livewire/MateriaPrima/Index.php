@@ -45,6 +45,6 @@ class Index extends Component
 
     public function colunasPesquisa(): array
     {
-        return ['Nome', 'Descricao'];
+        return ['Nome'];
     }
 }
