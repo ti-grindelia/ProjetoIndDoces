@@ -75,4 +75,5 @@
     <livewire:materia-prima.criar/>
     <livewire:materia-prima.atualizar/>
     <livewire:materia-prima.arquivar/>
+    <livewire:materia-prima.restaurar/>
 </div>
