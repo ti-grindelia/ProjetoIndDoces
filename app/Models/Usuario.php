@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Traits\Models\TemPesquisa;
 use Database\Factories\UserFactory;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
@@ -11,6 +12,7 @@ class Usuario extends Authenticatable
 {
     /** @use HasFactory<UserFactory> */
     use HasFactory, Notifiable;
+    use TemPesquisa;
 
     protected   $table              = 'Usuarios';
     protected   $primaryKey         = 'UsuarioID';

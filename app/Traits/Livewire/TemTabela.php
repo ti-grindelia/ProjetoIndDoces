@@ -13,7 +13,7 @@ trait TemTabela
 
     public string $ordenarDirecao = 'asc';
 
-    public string $ordenarPelaColuna = 'MateriaPrimaID';
+    public string $ordenarPelaColuna = '';
 
     public int $porPagina = 15;
 

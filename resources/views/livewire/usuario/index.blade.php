@@ -1,5 +1,5 @@
 <div>
-    <x-header title="Matérias-Primas" separator/>
+    <x-header title="Usuários" separator/>
 
     <div class="flex justify-between mb-4 items-end">
         <div class="w-full flex space-x-4 items-end">
@@ -7,7 +7,7 @@
                 <x-input
                     icon="o-magnifying-glass"
                     wire:model.live="pesquisa"
-                    placeholder="Pesquise por nome"
+                    placeholder="Pesquise por nome, usuário ou e-mail"
                 />
             </div>
             <x-select
@@ -16,53 +16,57 @@
                 placeholder="Registros por página"
             />
             <x-checkbox
-                label="Mostrar matérias inativas"
+                label="Mostrar usuários inativos"
                 wire:model.live="pesquisaInativos"
                 class="checkbox-info"
                 right tight
             />
         </div>
 
-        <x-button @click="$dispatch('materia-prima::criar')" label="Nova matéria-prima" icon="o-plus" class="bg-blue-600 text-white"/>
+        <x-button @click="$dispatch('usuario::criar')" label="Novo usuário" icon="o-plus" class="bg-blue-600 text-white"/>
     </div>
 
     <x-table :headers="$this->cabecalhos" :rows="$this->itens">
-        @scope('header_MateriaPrimaID', $headers)
-        <x-tabela.th :$headers nome="materiaPrimaID"/>
+        @scope('header_UsuarioID', $headers)
+        <x-tabela.th :$headers nome="usuarioID"/>
         @endscope
 
         @scope('header_Nome', $headers)
         <x-tabela.th :$headers nome="nome"/>
         @endscope
 
+        @scope('header_Usuario', $headers)
+        <x-tabela.th :$headers nome="usuario"/>
+        @endscope
+
         @scope('header_Email', $headers)
         <x-tabela.th :$headers nome="email"/>
         @endscope
 
-        @scope('actions', $materiaPrima)
+        @scope('actions', $usuario)
         <div class="flex items-center space-x-2">
             <x-button
-                id="editar-btn-{{ $materiaPrima->MateriaPrimaID }}"
-                wire:key="editar-btn-{{ $materiaPrima->MateriaPrimaID }}"
+                id="editar-btn-{{ $usuario->UsuarioID }}"
+                wire:key="editar-btn-{{ $usuario->UsuarioID }}"
                 icon="o-pencil"
-                @click="$dispatch('materia-prima::atualizar', { id: {{ $materiaPrima->MateriaPrimaID }} })"
+                @click="$dispatch('usuario::atualizar', { id: {{ $usuario->UsuarioID }} })"
                 spinner class="btn-sm btn-primary"
             />
 
-            @unless($materiaPrima->Ativo == false)
+            @unless($usuario->Ativo == false)
                 <x-button
-                    id="arquivar-btn-{{ $materiaPrima->MateriaPrimaID }}"
-                    wire:key="arquivar-btn-{{ $materiaPrima->MateriaPrimaID }}"
+                    id="arquivar-btn-{{ $usuario->UsuarioID }}"
+                    wire:key="arquivar-btn-{{ $usuario->UsuarioID }}"
                     icon="o-trash"
-                    @click="$dispatch('materia-prima::arquivar', { id: {{ $materiaPrima->MateriaPrimaID }} })"
+                    @click="$dispatch('usuario::arquivar', { id: {{ $usuario->UsuarioID }} })"
                     spinner class="btn-sm btn-error"
                 />
             @else
                 <x-button
-                    id="restaurar-btn-{{ $materiaPrima->MateriaPrimaID }}"
-                    wire:key="restaurar-btn-{{ $materiaPrima->MateriaPrimaID }}"
+                    id="restaurar-btn-{{ $usuario->UsuarioID }}"
+                    wire:key="restaurar-btn-{{ $usuario->UsuarioID }}"
                     icon="o-arrow-uturn-left"
-                    @click="$dispatch('materia-prima::restaurar', { id: {{ $materiaPrima->MateriaPrimaID }} })"
+                    @click="$dispatch('usuario::restaurar', { id: {{ $usuario->UsuarioID }} })"
                     spinner class="btn-sm btn-warning"
                 />
             @endunless
@@ -72,8 +76,8 @@
 
     {{ $this->itens->links() }}
 
-    <livewire:materia-prima.criar/>
-    <livewire:materia-prima.atualizar/>
-    <livewire:materia-prima.arquivar/>
-    <livewire:materia-prima.restaurar/>
+{{--    <livewire:usuario.criar/>--}}
+{{--    <livewire:usuario.atualizar/>--}}
+{{--    <livewire:usuario.arquivar/>--}}
+{{--    <livewire:usuario.restaurar/>--}}
 </div>

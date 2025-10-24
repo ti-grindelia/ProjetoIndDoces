@@ -71,6 +71,7 @@
                 <x-menu-item title="Home" icon="o-home" link="/" />
 
                 <x-menu-sub title="Cadastros" icon="o-pencil-square">
+                    <x-menu-item title="Usuário" icon="o-user" :link="route('usuario')" />
                     <x-menu-item title="Matéria-Prima" icon="o-eye-dropper" :link="route('materia-prima')" />
                     <x-menu-item title="Produto" icon="o-cake" link="####" />
                 </x-menu-sub>
