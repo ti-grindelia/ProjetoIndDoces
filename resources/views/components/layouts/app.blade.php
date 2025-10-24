@@ -28,7 +28,23 @@
         <x-slot:sidebar drawer="main-drawer" collapsible class="bg-base-100 lg:bg-inherit">
 
             {{-- BRAND --}}
-            <x-app-brand class="px-5 pt-4" />
+            <a href="/" wire:navigate class="px-5 pt-4">
+                <!-- Hidden when collapsed -->
+                <div {{ $attributes->class(["hidden-when-collapsed"]) }}>
+                    <div class="flex items-center gap-2 w-fit">
+                        <span class="text-4xl">🍬</span>
+                        <span class="font-bold text-3xl me-3 bg-gradient-to-r from-blue-500 to-purple-300 bg-clip-text text-transparent">
+                            Indústria
+                        </span>
+                    </div>
+                </div>
+
+                <!-- Display when collapsed -->
+                <div class="display-when-collapsed hidden mx-5 mt-5 mb-1 h-[48px]">
+                    <span class="text-5xl">🍬</span>
+                </div>
+            </a>
+{{--            <x-app-brand class="px-5 pt-4" />--}}
 
             {{-- MENU --}}
             <x-menu activate-by-route>

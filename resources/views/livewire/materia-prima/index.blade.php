@@ -46,7 +46,7 @@
                 wire:key="editar-btn-{{ $materiaPrima->MateriaPrimaID }}"
                 icon="o-pencil"
                 @click="$dispatch('materia-prima::editar', { id: {{ $materiaPrima->MateriaPrimaID }} })"
-                spinner class="btn-sm btn-accent"
+                spinner class="btn-sm btn-primary"
             />
 
             @unless($materiaPrima->Ativo == false)
