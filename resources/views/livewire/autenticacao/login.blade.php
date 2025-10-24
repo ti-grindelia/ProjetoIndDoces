@@ -24,7 +24,7 @@
                         Quero criar uma conta
                     </a>
                     <div>
-                        <x-button label="Login" class="bg-blue-600" type="submit" spinner="submit"/>
+                        <x-button label="Login" class="bg-blue-600 text-white" type="submit" spinner="submit"/>
                     </div>
                 </div>
             </x-slot:actions>

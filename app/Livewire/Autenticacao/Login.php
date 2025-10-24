@@ -22,7 +22,7 @@ class Login extends Component
     {
         if (!Auth::attempt(['email' => $this->email, 'password' => $this->senha])) {
 
-            $this->addError('credenciaisInvalidas', 'As credenciais não correspondem aos nossos registros');
+            $this->addError('credenciaisInvalidas', trans('auth.failed'));
 
             return;
         }
