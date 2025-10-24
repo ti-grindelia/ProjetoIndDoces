@@ -13,9 +13,9 @@ return new class extends Migration
     {
         Schema::create('Produtos', function (Blueprint $table) {
             $table->integer('ProdutoID')->autoIncrement()->primary();
+            $table->string('CodigoAlternativo', 30);
             $table->string('Descricao', 100);
             $table->text('Descritivo')->nullable();
-            $table->string('CodigoAlternativo', 50);
             $table->boolean('Ativo')->default(true);
         });
     }

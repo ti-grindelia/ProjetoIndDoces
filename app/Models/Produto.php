@@ -19,9 +19,9 @@ class Produto extends Model
     public $timestamps = false;
 
     protected $fillable     = [
+        'CodigoAlternativo',
         'Descricao',
         'Descritivo',
-        'CodigoAlternativo',
         'Ativo'
     ];
 
