@@ -71,4 +71,6 @@
     </x-table>
 
     {{ $this->itens->links() }}
+
+    <livewire:materia-prima.criar/>
 </div>
