@@ -15,7 +15,7 @@ return new class extends Migration
             $table->integer('UsuarioID')->primary()->autoIncrement();
             $table->string('Nome');
             $table->string('Usuario')->unique();
-            $table->string('Email')->unique();
+            $table->string('Email')->nullable()->unique();
             $table->string('Senha');
             $table->boolean('Ativo')->default(true);
         });

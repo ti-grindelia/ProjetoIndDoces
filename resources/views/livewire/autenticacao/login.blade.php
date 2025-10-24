@@ -15,8 +15,8 @@
         @endif
 
         <x-form wire:submit="tentarLogar">
-            <x-input label="Usuário" wire:model="usuario"/>
-            <x-input label="Senha" wire:model="senha" type="password"/>
+            <x-input label="Usuário" wire:model="usuario" icon="o-user"/>
+            <x-input label="Senha" wire:model="senha" type="password" icon="o-lock-closed"/>
 
             <x-slot:actions>
                 <div class="w-full flex items-center justify-between">

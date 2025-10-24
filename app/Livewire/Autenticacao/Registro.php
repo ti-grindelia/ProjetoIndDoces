@@ -13,7 +13,10 @@ class Registro extends Component
     #[Rule(['required', 'max:255'])]
     public ?string $nome = null;
 
-    #[Rule(['required', 'email', 'max:255', 'unique:Usuarios,Email'])]
+    #[Rule(['required', 'max:255', 'unique:Usuarios,Usuario'])]
+    public ?string $usuario = null;
+
+    #[Rule(['nullable', 'email', 'max:255', 'unique:Usuarios,Email'])]
     public ?string $email = null;
 
     #[Rule(['required'])]
@@ -32,10 +35,11 @@ class Registro extends Component
         $this->validate();
 
         $user = Usuario::create([
-            'Nome' => $this->nome,
-            'Email' => $this->email,
-            'Senha' => $this->senha,
-            'Ativo' => $this->ativo,
+            'Nome'    => $this->nome,
+            'Usuario' => $this->usuario,
+            'Email'   => $this->email,
+            'Senha'   => $this->senha,
+            'Ativo'   => $this->ativo,
         ]);
 
         auth()->login($user);
