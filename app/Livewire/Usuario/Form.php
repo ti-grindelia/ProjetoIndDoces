@@ -13,7 +13,7 @@ class Form extends BaseForm
 
     public string $usuarioNome = '';
 
-    public string $email = '';
+    public ?string $email = null;
 
     public string $senha = '';
 
