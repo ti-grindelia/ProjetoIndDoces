@@ -15,7 +15,7 @@
         @endif
 
         <x-form wire:submit="tentarLogar">
-            <x-input label="Email" wire:model="email"/>
+            <x-input label="Usuário" wire:model="usuario"/>
             <x-input label="Senha" wire:model="senha" type="password"/>
 
             <x-slot:actions>

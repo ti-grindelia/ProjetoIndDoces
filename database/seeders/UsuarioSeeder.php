@@ -14,9 +14,10 @@ class UsuarioSeeder extends Seeder
     {
         Usuario::factory()
             ->create([
-                'Nome'  => 'Admin',
-                'Email' => 'admin@email.com',
-                'Senha' => 'password',
+                'Nome'    => 'Admin',
+                'Usuario' => 'admin',
+                'Email'   => 'admin@email.com',
+                'Senha'   => 'password',
             ]);
     }
 }

@@ -9,7 +9,7 @@ use Livewire\Component;
 
 class Login extends Component
 {
-    public ?string $email = null;
+    public ?string $usuario = null;
     public ?string $senha = null;
 
     #[Layout('components.layouts.convidado')]
@@ -20,7 +20,7 @@ class Login extends Component
 
     public function tentarLogar(): void
     {
-        if (!Auth::attempt(['email' => $this->email, 'password' => $this->senha])) {
+        if (!Auth::attempt(['Usuario' => $this->usuario, 'password' => $this->senha])) {
 
             $this->addError('credenciaisInvalidas', trans('auth.failed'));
 
