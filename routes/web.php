@@ -3,6 +3,7 @@
 use App\Livewire\Autenticacao\Login;
 use App\Livewire\Autenticacao\Registro;
 use App\Livewire\Usuario;
+use App\Livewire\Produto;
 use App\Livewire\MateriaPrima;
 use App\Livewire\Welcome;
 
@@ -15,4 +16,5 @@ Route::middleware(['auth'])->group(function () {
 
     Route::get('/usuario', Usuario\Index::class)->name('usuario');
     Route::get('/materia-prima', MateriaPrima\Index::class)->name('materia-prima');
+    Route::get('/produto', Produto\Index::class)->name('produto');
 });
