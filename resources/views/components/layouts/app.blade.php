@@ -52,11 +52,11 @@
                     <x-menu-separator />
                 @endif
 
-                <x-menu-item title="Hello" icon="o-sparkles" link="/" />
+                <x-menu-item title="Home" icon="o-home" link="/" />
 
-                <x-menu-sub title="Settings" icon="o-cog-6-tooth">
-                    <x-menu-item title="Wifi" icon="o-wifi" link="####" />
-                    <x-menu-item title="Archives" icon="o-archive-box" link="####" />
+                <x-menu-sub title="Cadastros" icon="o-pencil-square">
+                    <x-menu-item title="Matéria-Prima" icon="o-eye-dropper" :link="route('materia-prima')" />
+                    <x-menu-item title="Produto" icon="o-cake" link="####" />
                 </x-menu-sub>
             </x-menu>
         </x-slot:sidebar>
