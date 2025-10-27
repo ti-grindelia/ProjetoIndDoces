@@ -75,6 +75,10 @@
                     <x-menu-item title="Matéria-Prima" icon="o-eye-dropper" :link="route('materia-prima')" />
                     <x-menu-item title="Produto" icon="o-cake" :link="route('produto')" />
                 </x-menu-sub>
+
+                <x-menu-sub title="Ordem de Produção" icon="o-truck">
+                    <x-menu-item title="Usuário" icon="o-user" link="#" />
+                </x-menu-sub>
             </x-menu>
         </x-slot:sidebar>
 
