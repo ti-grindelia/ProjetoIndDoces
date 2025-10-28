@@ -11,9 +11,19 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('empresas', function (Blueprint $table) {
-            $table->id();
-            $table->timestamps();
+        Schema::create('Empresas', function (Blueprint $table) {
+            $table->integer('EmpresaID')->autoIncrement()->primary();
+            $table->string('CNPJ', 14)->unique();
+            $table->string('RazaoSocial', 255);
+            $table->string('CEP', 9);
+            $table->string('Endereco', 255);
+            $table->string('Numero', 10);
+            $table->string('Complemento', 255)->nullable();
+            $table->string('Bairro', 255);
+            $table->string('Cidade', 255);
+            $table->string('Estado', 2);
+            $table->string('Telefone', 15)->nullable();
+            $table->string('Email', 255)->nullable();
         });
     }
 
@@ -22,6 +32,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('empresas');
+        Schema::dropIfExists('Empresas');
     }
 };

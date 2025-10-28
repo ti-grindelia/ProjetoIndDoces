@@ -2,10 +2,11 @@
 
 namespace Database\Factories;
 
+use App\Models\Empresa;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 /**
- * @extends \Illuminate\Database\Eloquent\Factories\Factory<\App\Models\Empresa>
+ * @extends Factory<Empresa>
  */
 class EmpresaFactory extends Factory
 {
@@ -17,7 +18,17 @@ class EmpresaFactory extends Factory
     public function definition(): array
     {
         return [
-            //
+            'CNPJ' => $this->faker->unique()->numerify('########0001##'),
+            'RazaoSocial' => $this->faker->company(),
+            'CEP' => $this->faker->postcode(),
+            'Endereco' => $this->faker->streetName(),
+            'Numero' => $this->faker->buildingNumber(),
+            'Complemento' => $this->faker->secondaryAddress(),
+            'Bairro' => $this->faker->citySuffix(),
+            'Cidade' => $this->faker->city(),
+            'Estado' => $this->faker->stateAbbr(),
+            'Telefone' => $this->faker->phoneNumber(),
+            'Email' => $this->faker->unique()->safeEmail(),
         ];
     }
 }

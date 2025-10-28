@@ -19,7 +19,7 @@
             <x-input label="Valor" wire:model="form.valor"/>
             <x-input label="Custo Médio" wire:model="form.custoMedio"/>
         </div>
-        
+
         <x-checkbox label="Ativo" wire:model="form.ativo" class="checkbox-info" tight/>
 
         <x-slot:actions>
