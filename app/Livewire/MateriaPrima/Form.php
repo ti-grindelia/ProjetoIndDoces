@@ -9,21 +9,27 @@ class Form extends BaseForm
 {
     public ?MateriaPrima $materiaPrima = null;
 
+    public string $codigoAlternativo = '';
+
     public string $nome = '';
 
-    public string $descricao = '';
+    public string $unidade = '';
 
-    public string $fornecedor = '';
+    public float $valor = 0.00;
+
+    public float $custoMedio = 0.00;
 
     public bool $ativo = true;
 
     public function rules(): array
     {
         return [
-            'nome'       => ['required', 'min:3', 'max:255'],
-            'descricao'  => ['required'],
-            'fornecedor' => ['required', 'min:3', 'max:255'],
-            'ativo'      => ['boolean'],
+            'codigoAlternativo' => ['nullable', 'min:3', 'max:50'],
+            'nome'              => ['required', 'min:3', 'max:255'],
+            'unidade'           => ['required', 'in:L,KG'],
+            'valor'             => ['nullable', 'min:0', 'numeric'],
+            'custoMedio'        => ['nullable', 'min:0', 'numeric'],
+            'ativo'             => ['boolean'],
         ];
     }
 
@@ -31,10 +37,12 @@ class Form extends BaseForm
     {
         $this->materiaPrima = $materiaPrima;
 
-        $this->nome       = $materiaPrima->Nome;
-        $this->descricao  = $materiaPrima->Descricao;
-        $this->fornecedor = $materiaPrima->Fornecedor;
-        $this->ativo      = $materiaPrima->Ativo;
+        $this->codigoAlternativo = $materiaPrima->CodigoAlternativo;
+        $this->nome              = $materiaPrima->Nome;
+        $this->unidade           = $materiaPrima->Unidade;
+        $this->valor             = $materiaPrima->Valor;
+        $this->custoMedio        = $materiaPrima->CustoMedio;
+        $this->ativo             = $materiaPrima->Ativo;
     }
 
     public function criar(): void
@@ -42,10 +50,12 @@ class Form extends BaseForm
         $this->validate();
 
         MateriaPrima::create([
-            'Nome'       => $this->nome,
-            'Descricao'  => $this->descricao,
-            'Fornecedor' => $this->fornecedor,
-            'Ativo'      => $this->ativo,
+            'CodigoAlternativo' => $this->codigoAlternativo,
+            'Nome'              => $this->nome,
+            'Unidade'           => $this->unidade,
+            'Valor'             => $this->valor,
+            'CustoMedio'        => $this->custoMedio,
+            'Ativo'             => $this->ativo,
         ]);
 
         $this->reset();
@@ -55,10 +65,12 @@ class Form extends BaseForm
     {
         $this->validate();
 
-        $this->materiaPrima->Nome       = $this->nome;
-        $this->materiaPrima->Descricao  = $this->descricao;
-        $this->materiaPrima->Fornecedor = $this->fornecedor;
-        $this->materiaPrima->Ativo      = $this->ativo;
+        $this->materiaPrima->CodigoAlternativo = $this->codigoAlternativo;
+        $this->materiaPrima->Nome              = $this->nome;
+        $this->materiaPrima->Unidade           = $this->unidade;
+        $this->materiaPrima->Valor             = $this->valor;
+        $this->materiaPrima->CustoMedio        = $this->custoMedio;
+        $this->materiaPrima->Ativo             = $this->ativo;
 
         $this->materiaPrima->update();
     }

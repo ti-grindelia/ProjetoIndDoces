@@ -18,10 +18,12 @@ class MateriaPrimaFactory extends Factory
     public function definition(): array
     {
         return [
-            'Nome'       => $this->faker->word(),
-            'Descricao'  => $this->faker->sentence(),
-            'Fornecedor' => $this->faker->company(),
-            'Ativo'      => $this->faker->boolean(),
+            'CodigoAlternativo' => $this->faker->bothify('??-#####'),
+            'Nome'              => $this->faker->word(),
+            'Unidade'           => $this->faker->randomElement(['KG', 'L']),
+            'Valor'             => $this->faker->randomFloat(2, 1, 100),
+            'CustoMedio'        => $this->faker->randomFloat(2, 1, 100),
+            'Ativo'             => $this->faker->boolean(),
         ];
     }
 }

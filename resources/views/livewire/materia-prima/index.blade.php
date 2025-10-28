@@ -31,12 +31,24 @@
         <x-tabela.th :$headers nome="materiaPrimaID"/>
         @endscope
 
+        @scope('header_CodAlternativo', $headers)
+        <x-tabela.th :$headers nome="codAlternativo"/>
+        @endscope
+
         @scope('header_Nome', $headers)
         <x-tabela.th :$headers nome="nome"/>
         @endscope
 
-        @scope('header_Email', $headers)
-        <x-tabela.th :$headers nome="email"/>
+        @scope('header_Unidade', $headers)
+        <x-tabela.th :$headers nome="unidade"/>
+        @endscope
+
+        @scope('header_Valor', $headers)
+        <x-tabela.th :$headers nome="valor"/>
+        @endscope
+
+        @scope('header_CustoMedio', $headers)
+        <x-tabela.th :$headers nome="custoMedio"/>
         @endscope
 
         @scope('actions', $materiaPrima)

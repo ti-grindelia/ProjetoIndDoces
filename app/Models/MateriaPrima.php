@@ -18,9 +18,11 @@ class MateriaPrima extends Model
     public      $timestamps         = false;
 
     protected $fillable = [
+        'CodigoAlternativo',
         'Nome',
-        'Descricao',
-        'Fornecedor',
+        'Unidade',
+        'Valor',
+        'CustoMedio',
         'Ativo'
     ];
 }

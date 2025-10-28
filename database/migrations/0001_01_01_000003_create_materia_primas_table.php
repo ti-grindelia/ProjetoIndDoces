@@ -13,9 +13,11 @@ return new class extends Migration
     {
         Schema::create('MateriasPrimas', function (Blueprint $table) {
             $table->integer('MateriaPrimaID')->autoIncrement()->primary();
+            $table->string('CodigoAlternativo', 50)->nullable()->unique();
             $table->string('Nome', 255);
-            $table->longText('Descricao');
-            $table->string('Fornecedor', 255);
+            $table->string('Unidade', 2);
+            $table->decimal('Valor', 10, 2)->nullable();
+            $table->decimal('CustoMedio', 10, 2)->nullable();
             $table->tinyInteger('Ativo')->default(1);
         });
     }

@@ -33,8 +33,11 @@ class Index extends Component
     {
         return [
             Cabecalho::make('MateriaPrimaID', '#'),
+            Cabecalho::make('CodigoAlternativo', 'Cod.Alternativo'),
             Cabecalho::make('Nome', 'Nome'),
-            Cabecalho::make('Fornecedor', 'Fornecedor'),
+            Cabecalho::make('Unidade', 'Unidade'),
+            Cabecalho::make('Valor', 'Valor'),
+            Cabecalho::make('CustoMedio', 'Custo Médio')
         ];
     }
 
@@ -49,6 +52,6 @@ class Index extends Component
 
     public function colunasPesquisa(): array
     {
-        return ['Nome'];
+        return ['CodigoAlternativo', 'Nome'];
     }
 }
