@@ -30,6 +30,12 @@ class Empresa extends Model
         'Cidade',
         'Estado',
         'Telefone',
-        'Email'
+        'Email',
+        'Ativo'
     ];
+
+    public function getEnderecoCompletoAttribute(): string
+    {
+        return "$this->Endereco, $this->Numero - $this->Bairro, $this->Cidade/$this->Estado";
+    }
 }

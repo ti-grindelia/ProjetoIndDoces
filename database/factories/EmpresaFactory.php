@@ -18,7 +18,7 @@ class EmpresaFactory extends Factory
     public function definition(): array
     {
         return [
-            'CNPJ' => $this->faker->unique()->numerify('########0001##'),
+            'CNPJ' => $this->faker->unique()->numerify('##.###.###/0001-##'),
             'RazaoSocial' => $this->faker->company(),
             'CEP' => $this->faker->postcode(),
             'Endereco' => $this->faker->streetName(),
@@ -29,6 +29,7 @@ class EmpresaFactory extends Factory
             'Estado' => $this->faker->stateAbbr(),
             'Telefone' => $this->faker->phoneNumber(),
             'Email' => $this->faker->unique()->safeEmail(),
+            'Ativo' => 1,
         ];
     }
 }
