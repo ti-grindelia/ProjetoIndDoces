@@ -32,11 +32,11 @@ class Index extends Component
     public function tabelaCabecalho(): array
     {
         return [
-            Cabecalho::make('CNPJ', 'CNPJ'),
+            Cabecalho::make('CnpjFormatado', 'CNPJ'),
             Cabecalho::make('RazaoSocial', 'Nome'),
-            Cabecalho::make('Telefone', 'Telefone'),
+            Cabecalho::make('TelefoneFormatado', 'Telefone'),
             Cabecalho::make('Email', 'Email'),
-            Cabecalho::make('EnderecoCompleto', 'Endereco')
+            Cabecalho::make('EnderecoCompleto', 'Endereço')
         ];
     }
 

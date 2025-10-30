@@ -38,4 +38,43 @@ class Empresa extends Model
     {
         return "$this->Endereco, $this->Numero - $this->Bairro, $this->Cidade/$this->Estado";
     }
+
+    public function getCnpjFormatadoAttribute(): ?string
+    {
+        $v = preg_replace('/\D/', '', $this->CNPJ);
+        if (strlen($v) !== 14) {
+            return $this->CNPJ;
+        }
+
+        return preg_replace(
+            '/(\d{2})(\d{3})(\d{3})(\d{4})(\d{2})/',
+            '$1.$2.$3/$4-$5',
+            $v
+        );
+    }
+
+    public function getTelefoneFormatadoAttribute(): ?string
+    {
+        $v = preg_replace('/\D/', '', $this->Telefone);
+
+        if (strlen($v) === 11) {
+            return preg_replace('/(\d{2})(\d{5})(\d{4})/', '($1) $2-$3', $v);
+        }
+
+        if (strlen($v) === 10) {
+            return preg_replace('/(\d{2})(\d{4})(\d{4})/', '($1) $2-$3', $v);
+        }
+
+        return $this->Telefone;
+    }
+
+    public function getCepFormatadoAttribute(): ?string
+    {
+        $v = preg_replace('/\D/', '', $this->CEP);
+        if (strlen($v) !== 8) {
+            return $this->CEP;
+        }
+
+        return preg_replace('/(\d{5})(\d{3})/', '$1-$2', $v);
+    }
 }
