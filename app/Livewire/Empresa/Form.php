@@ -34,14 +34,12 @@ class Form extends BaseForm
 
     public bool $ativo = true;
 
-    public bool $enderecoBloqueado = false;
-
     public function rules(): array
     {
         return [
             'cnpj'        => ['required', 'min:14', 'max:19'],
             'razaoSocial' => ['required', 'min:3', 'max:255'],
-            'cep'         => ['required', 'min:9', 'max:9'],
+            'cep'         => ['required', 'min:8', 'max:9'],
             'endereco'    => ['required', 'min:3', 'max:255'],
             'numero'      => ['required', 'min:1', 'max:10'],
             'complemento' => ['nullable', 'min:3', 'max:255'],
@@ -137,8 +135,6 @@ class Form extends BaseForm
             $this->bairro = $response['bairro'] ?? '';
             $this->cidade = $response['localidade'] ?? '';
             $this->estado = $response['uf'] ?? '';
-
-            $this->enderecoBloqueado = true;
         } catch (\Exception $e) {
             $this->addError('cep', 'Erro ao buscar CEP');
         }
