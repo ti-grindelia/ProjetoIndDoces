@@ -1,3 +1,7 @@
-<div>
-    {{-- Stop trying to control. --}}
-</div>
+<x-modal wire:model="modal" title="Restaurar empresa" class="backdrop-blur"
+    subtitle="Você está restaurando a empresa {{ $empresa?->RazaoSocial }}">
+    <x-slot:actions>
+        <x-button label="Cancelar" @click="$wire.modal = false"/>
+        <x-button label="Concluir" class="bg-blue-600 text-white" wire:click="restaurar"/>
+    </x-slot:actions>
+</x-modal>
