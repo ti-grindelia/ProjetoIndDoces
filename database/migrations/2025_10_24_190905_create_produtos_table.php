@@ -13,9 +13,14 @@ return new class extends Migration
     {
         Schema::create('Produtos', function (Blueprint $table) {
             $table->integer('ProdutoID')->autoIncrement()->primary();
-            $table->string('CodigoAlternativo', 30);
+            $table->string('CodigoAlternativo', 30)->nullable();
             $table->string('Descricao', 100);
             $table->text('Descritivo')->nullable();
+            $table->integer('ProdutoCategoriaID');
+            $table->string('Categoria', 100);
+            $table->decimal('Preco', 10, 2)->nullable();
+            $table->boolean('Fracionado')->default(false);
+            $table->dateTime('UltimaSincronizacao')->nullable();
             $table->boolean('Ativo')->default(true);
         });
     }

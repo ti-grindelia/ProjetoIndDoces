@@ -22,10 +22,20 @@ class Produto extends Model
         'CodigoAlternativo',
         'Descricao',
         'Descritivo',
+        'ProdutoCategoriaID',
+        'Categoria',
+        'Preco',
+        'Fracionado',
+        'UltimaSincronizacao',
         'Ativo'
     ];
 
     protected $casts = [
         'Ativo' => 'boolean'
     ];
+
+    public function getCategoriaIdAttribute(): string
+    {
+        return "$this->ProdutoCategoriaID - $this->Categoria";
+    }
 }

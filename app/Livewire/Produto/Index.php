@@ -30,9 +30,10 @@ class Index extends Component
     public function tabelaCabecalho(): array
     {
         return [
-            Cabecalho::make('ProdutoID', '#'),
-            Cabecalho::make('CodigoAlternativo', 'Código'),
-            Cabecalho::make('Descricao', 'Descrição')
+            Cabecalho::make('CodigoAlternativo', '#'),
+            Cabecalho::make('Descricao', 'Descrição'),
+            Cabecalho::make('Categoria', 'Categoria'),
+            Cabecalho::make('Preco', 'Preço (R$)'),
         ];
     }
 
@@ -47,6 +48,6 @@ class Index extends Component
 
     public function colunasPesquisa(): array
     {
-        return ['CodigoAlternativo', 'Descricao'];
+        return ['CodigoAlternativo', 'Descricao', 'Categoria'];
     }
 }

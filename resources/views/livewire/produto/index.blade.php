@@ -22,8 +22,6 @@
                 right tight
             />
         </div>
-
-        <x-button @click="$dispatch('produto::criar')" label="Novo produto" icon="o-plus" class="bg-blue-600 text-white"/>
     </div>
 
     <x-table :headers="$this->cabecalhos" :rows="$this->itens">
