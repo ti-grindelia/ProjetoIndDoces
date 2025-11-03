@@ -19,6 +19,9 @@ return new class extends Migration
             $table->integer('ProdutoCategoriaID');
             $table->string('Categoria', 100);
             $table->decimal('Preco', 10, 2)->nullable();
+            $table->decimal('CustoMedio', 10, 2)->nullable();
+            $table->integer('EmpresaID')->nullable();
+            $table->foreignIdFor('EmpresaID')->references('EmpresaID')->on('Empresas');
             $table->boolean('Fracionado')->default(false);
             $table->dateTime('UltimaSincronizacao')->nullable();
             $table->boolean('Ativo')->default(true);

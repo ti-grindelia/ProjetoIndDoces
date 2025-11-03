@@ -15,14 +15,29 @@ class Form extends BaseForm
 
     public string $descritivo = '';
 
+    public string $categoria = '';
+
+    public float $preco = 0.00;
+
+    public float $custoMedio = 0.00;
+
+    public ?int $empresa = null;
+
+    public bool $fracionado = false;
+
     public bool $ativo = true;
 
     public function rules(): array
     {
         return [
-            'codigoAlternativo' => ['required', 'min:3', 'max:30'],
+            'codigoAlternativo' => ['nullable', 'min:3', 'max:30'],
             'descricao'         => ['required', 'min:3', 'max:100'],
             'descritivo'        => ['required', 'min:3', 'max:255'],
+            'categoria'         => ['required', 'min:3', 'max:255'],
+            'preco'             => ['required', 'min:0', 'numeric'],
+            'custoMedio'        => ['nullable', 'min:0', 'numeric'],
+            'empresa'           => ['nullable', 'integer', 'exists:Empresas,EmpresaID'],
+            'fracionado'        => ['boolean'],
             'ativo'             => ['boolean'],
         ];
     }
@@ -34,31 +49,19 @@ class Form extends BaseForm
         $this->codigoAlternativo = $produto->CodigoAlternativo;
         $this->descricao         = $produto->Descricao;
         $this->descritivo        = $produto->Descritivo;
+        $this->categoria         = $produto->Categoria;
+        $this->preco             = $produto->Preco;
+        $this->custoMedio        = $produto->CustoMedio ?? 0.00;
+        $this->empresa           = $produto->EmpresaID ?? 0;
+        $this->fracionado        = $produto->Fracionado;
         $this->ativo             = $produto->Ativo;
-    }
-
-    public function criar(): void
-    {
-        $this->validate();
-
-        Produto::create([
-            'CodigoAlternativo' => $this->codigoAlternativo,
-            'Descricao'         => $this->descricao,
-            'Descritivo'        => $this->descritivo,
-            'Ativo'             => $this->ativo,
-        ]);
-
-        $this->reset();
     }
 
     public function atualizar(): void
     {
         $this->validate();
 
-        $this->produto->CodigoAlternativo = $this->codigoAlternativo;
-        $this->produto->Descricao         = $this->descricao;
-        $this->produto->Descritivo        = $this->descritivo;
-        $this->produto->Ativo             = $this->ativo;
+        $this->produto->EmpresaID = $this->empresa;
 
         $this->produto->update();
     }

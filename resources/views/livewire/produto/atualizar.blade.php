@@ -1,9 +1,37 @@
-<x-modal wire:model="modal" title="Atualizar produto" separator class="backdrop-blur">
+<x-modal wire:model="modal" title="Atualizar produto" separator class="backdrop-blur" box-class="min-w-2xl">
     <x-form wire:submit="salvar" id="atualizar-produto-form">
-        <x-input label="Código Alternativo" wire:model="form.codigoAlternativo"/>
-        <x-input label="Descrição" wire:model="form.descricao"/>
-        <x-textarea label="Descritivo" wire:model="form.descritivo" rows="3"/>
-        <x-checkbox label="Ativo" wire:model="form.ativo" class="checkbox-info" tight/>
+        <div class="flex flex-row space-x-4 mb-2 w-full">
+            <div class="w-1/3">
+                <x-input label="Código Alternativo" wire:model="form.codigoAlternativo" readonly/>
+            </div>
+            <div class="flex-1">
+                <x-input label="Descrição" wire:model="form.descricao" readonly/>
+            </div>
+        </div>
+
+        <div class="flex flex-row space-x-4 mb-2 w-full">
+            <div class="w-1/2">
+                <x-input label="Descritivo" wire:model="form.descritivo" readonly/>
+            </div>
+            <div class="flex-1">
+                <x-input label="Categoria" wire:model="form.categoria" readonly/>
+            </div>
+        </div>
+
+        <div class="flex flex-row space-x-4 mb-2 w-full">
+            <div class="w-1/2">
+                <x-input label="Preço" wire:model="form.preco" readonly/>
+            </div>
+            <div class="flex-1">
+                <x-input label="Custo Médio" wire:model="form.custoMedio" readonly/>
+            </div>
+        </div>
+
+        <x-select class="mb-2" icon="o-home-modern" :options="$this->empresas" wire:model="form.empresa"
+                    label="Empresa" placeholder="Selecione a empresa"/>
+
+        <x-checkbox label="Fracionado" wire:model="form.fracionado" class="checkbox-info" tight disabled/>
+        <x-checkbox label="Ativo" wire:model="form.ativo" class="checkbox-info" tight disabled/>
 
         <x-slot:actions>
             <x-button label="Cancelar" @click="$wire.modal = false"/>

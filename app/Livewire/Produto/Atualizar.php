@@ -2,8 +2,11 @@
 
 namespace App\Livewire\Produto;
 
+use App\Models\Empresa;
 use App\Models\Produto;
 use Illuminate\Contracts\View\View;
+use Illuminate\Support\Collection;
+use Livewire\Attributes\Computed;
 use Livewire\Attributes\On;
 use Livewire\Component;
 
@@ -16,6 +19,18 @@ class Atualizar extends Component
     public function render(): View
     {
         return view('livewire.produto.atualizar');
+    }
+
+    #[Computed]
+    public function empresas(): Collection
+    {
+        return Empresa::query()
+            ->where('Ativo', true)
+            ->get()
+            ->map(fn ($empresa) => [
+                'id' => $empresa->EmpresaID,
+                'name' => $empresa->RazaoSocial,
+            ]);
     }
 
     #[On('produto::atualizar')]

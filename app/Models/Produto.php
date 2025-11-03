@@ -6,6 +6,7 @@ use App\Traits\Models\TemPesquisa;
 use Database\Factories\ProdutoFactory;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class Produto extends Model
 {
@@ -25,6 +26,8 @@ class Produto extends Model
         'ProdutoCategoriaID',
         'Categoria',
         'Preco',
+        'CustoMedio',
+        'EmpresaID',
         'Fracionado',
         'UltimaSincronizacao',
         'Ativo'
@@ -37,5 +40,10 @@ class Produto extends Model
     public function getCategoriaIdAttribute(): string
     {
         return "$this->ProdutoCategoriaID - $this->Categoria";
+    }
+
+    public function empresa(): BelongsTo
+    {
+        return $this->belongsTo(Empresa::class, 'EmpresaID');
     }
 }

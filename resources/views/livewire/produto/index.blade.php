@@ -25,10 +25,6 @@
     </div>
 
     <x-table :headers="$this->cabecalhos" :rows="$this->itens">
-        @scope('header_ProdutoID', $headers)
-        <x-tabela.th :$headers nome="produtoID"/>
-        @endscope
-
         @scope('header_CodigoAlternativo', $headers)
         <x-tabela.th :$headers nome="codigoAlternativo"/>
         @endscope
@@ -37,8 +33,16 @@
         <x-tabela.th :$headers nome="descricao"/>
         @endscope
 
-        @scope('header_Descritivo', $headers)
-        <x-tabela.th :$headers nome="descritivo"/>
+        @scope('header_Categoria', $headers)
+        <x-tabela.th :$headers nome="categoria"/>
+        @endscope
+
+        @scope('header_Preco', $headers)
+        <x-tabela.th :$headers nome="preco"/>
+        @endscope
+
+        @scope('header_CustoMedio', $headers)
+        <x-tabela.th :$headers nome="custoMedio"/>
         @endscope
 
         @scope('actions', $produto)
@@ -51,31 +55,30 @@
                 spinner class="btn-sm btn-primary"
             />
 
-            @unless($produto->Ativo == false)
-                <x-button
-                    id="arquivar-btn-{{ $produto->ProdutoID }}"
-                    wire:key="arquivar-btn-{{ $produto->ProdutoID }}"
-                    icon="o-trash"
-                    @click="$dispatch('produto::arquivar', { id: {{ $produto->ProdutoID }} })"
-                    spinner class="btn-sm btn-error"
-                />
-            @else
-                <x-button
-                    id="restaurar-btn-{{ $produto->ProdutoID }}"
-                    wire:key="restaurar-btn-{{ $produto->ProdutoID }}"
-                    icon="o-arrow-uturn-left"
-                    @click="$dispatch('produto::restaurar', { id: {{ $produto->ProdutoID }} })"
-                    spinner class="btn-sm btn-warning"
-                />
-            @endunless
+{{--            @unless($produto->Ativo == false)--}}
+{{--                <x-button--}}
+{{--                    id="arquivar-btn-{{ $produto->ProdutoID }}"--}}
+{{--                    wire:key="arquivar-btn-{{ $produto->ProdutoID }}"--}}
+{{--                    icon="o-trash"--}}
+{{--                    @click="$dispatch('produto::arquivar', { id: {{ $produto->ProdutoID }} })"--}}
+{{--                    spinner class="btn-sm btn-error"--}}
+{{--                />--}}
+{{--            @else--}}
+{{--                <x-button--}}
+{{--                    id="restaurar-btn-{{ $produto->ProdutoID }}"--}}
+{{--                    wire:key="restaurar-btn-{{ $produto->ProdutoID }}"--}}
+{{--                    icon="o-arrow-uturn-left"--}}
+{{--                    @click="$dispatch('produto::restaurar', { id: {{ $produto->ProdutoID }} })"--}}
+{{--                    spinner class="btn-sm btn-warning"--}}
+{{--                />--}}
+{{--            @endunless--}}
         </div>
         @endscope
     </x-table>
 
     {{ $this->itens->links() }}
 
-    <livewire:produto.criar/>
     <livewire:produto.atualizar/>
-    <livewire:produto.arquivar/>
-    <livewire:produto.restaurar/>
+{{--    <livewire:produto.arquivar/>--}}
+{{--    <livewire:produto.restaurar/>--}}
 </div>

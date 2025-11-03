@@ -34,6 +34,7 @@ class Index extends Component
             Cabecalho::make('Descricao', 'Descrição'),
             Cabecalho::make('Categoria', 'Categoria'),
             Cabecalho::make('Preco', 'Preço (R$)'),
+            Cabecalho::make('CustoMedio', 'Custo Médio (R$)'),
         ];
     }
 
