@@ -12,7 +12,7 @@
                 <x-select
                     label="Unidade"
                     wire:model="form.unidade"
-                    :options="[['id'=>'KG','name'=>'Quilograma'],['id'=>'L','name'=>'Litro']]"
+                    :options="[['id'=>'KG','name'=>'Quilograma'],['id'=>'L','name'=>'Litro'],['id'=>'UND','name'=>'Unidade']]"
                     placeholder="Un. medida"
                 />
             </div>
