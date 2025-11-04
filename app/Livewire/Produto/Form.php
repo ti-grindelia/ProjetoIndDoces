@@ -62,6 +62,7 @@ class Form extends BaseForm
         $this->validate();
 
         $this->produto->EmpresaID = $this->empresa;
+        $this->produto->CustoMedio = $this->custoMedio;
 
         $this->produto->update();
     }

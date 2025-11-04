@@ -23,7 +23,7 @@
                 <x-input label="Preço" wire:model="form.preco" readonly/>
             </div>
             <div class="flex-1">
-                <x-input label="Custo Médio" wire:model="form.custoMedio" readonly/>
+                <x-input label="Custo Médio" wire:model="form.custoMedio"/>
             </div>
         </div>
 
