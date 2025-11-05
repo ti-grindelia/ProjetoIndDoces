@@ -16,11 +16,11 @@ return new class extends Migration
             $table->integer('ProdutoID');
             $table->integer('MateriaPrimaID');
             $table->string('Unidade', 2);
-            $table->decimal('Quantidade', 10, 2);
+            $table->decimal('Quantidade', 10, 4);
             $table->decimal('CustoUnitario', 10, 2);
             $table->decimal('Custo', 10, 2);
-            $table->foreignIdFor('ProdutoID')->references('ProdutoID')->on('Produtos');
-            $table->foreignIdFor('MateriaPrimaID')->references('MateriaPrimaID')->on('MateriasPrimas');
+            $table->foreign('ProdutoID')->references('ProdutoID')->on('Produtos');
+            $table->foreign('MateriaPrimaID')->references('MateriaPrimaID')->on('MateriasPrimas');
         });
     }
 

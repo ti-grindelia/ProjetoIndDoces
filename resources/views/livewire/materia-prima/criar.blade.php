@@ -3,7 +3,7 @@
         <div class="flex flex-row space-x-4 mb-4">
             <x-input label="Cod. Alternativo" wire:model="form.codigoAlternativo"/>
             <div class="w-2/3">
-                <x-input label="Nome" wire:model="form.nome"/>
+                <x-input label="Descrição" wire:model="form.descricao"/>
             </div>
         </div>
 
@@ -16,8 +16,7 @@
                     placeholder="Un. medida"
                 />
             </div>
-            <x-input label="Valor" wire:model="form.valor"/>
-            <x-input label="Custo Médio" wire:model="form.custoMedio"/>
+            <x-input label="Preço Compra" wire:model="form.precoCompra"/>
         </div>
 
         <x-checkbox label="Ativo" wire:model="form.ativo" class="checkbox-info" tight/>

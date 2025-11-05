@@ -35,21 +35,18 @@
         <x-tabela.th :$headers nome="codAlternativo"/>
         @endscope
 
-        @scope('header_Nome', $headers)
-        <x-tabela.th :$headers nome="nome"/>
+        @scope('header_Descricao', $headers)
+        <x-tabela.th :$headers nome="descricao"/>
         @endscope
 
         @scope('header_Unidade', $headers)
         <x-tabela.th :$headers nome="unidade"/>
         @endscope
 
-        @scope('header_Valor', $headers)
-        <x-tabela.th :$headers nome="valor"/>
+        @scope('header_PrecoCompra', $headers)
+        <x-tabela.th :$headers nome="precoCompra"/>
         @endscope
 
-        @scope('header_CustoMedio', $headers)
-        <x-tabela.th :$headers nome="custoMedio"/>
-        @endscope
 
         @scope('actions', $materiaPrima)
         <div class="flex items-center space-x-2">

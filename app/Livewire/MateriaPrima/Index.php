@@ -34,10 +34,9 @@ class Index extends Component
         return [
             Cabecalho::make('MateriaPrimaID', '#'),
             Cabecalho::make('CodigoAlternativo', 'Cod.Alternativo'),
-            Cabecalho::make('Nome', 'Nome'),
+            Cabecalho::make('Descricao', 'Descrição'),
             Cabecalho::make('Unidade', 'Unidade'),
-            Cabecalho::make('Valor', 'Valor'),
-            Cabecalho::make('CustoMedio', 'Custo Médio')
+            Cabecalho::make('PrecoCompra', 'Preço Compra (R$)'),
         ];
     }
 
@@ -52,6 +51,6 @@ class Index extends Component
 
     public function colunasPesquisa(): array
     {
-        return ['CodigoAlternativo', 'Nome'];
+        return ['CodigoAlternativo', 'Descricao'];
     }
 }

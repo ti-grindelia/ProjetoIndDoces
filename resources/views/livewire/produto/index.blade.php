@@ -47,13 +47,25 @@
 
         @scope('actions', $produto)
         <div class="flex items-center space-x-2">
-            <x-button
-                id="editar-btn-{{ $produto->ProdutoID }}"
-                wire:key="editar-btn-{{ $produto->ProdutoID }}"
-                icon="o-pencil"
-                @click="$dispatch('produto::atualizar', { id: {{ $produto->ProdutoID }} })"
-                spinner class="btn-sm btn-primary"
-            />
+            <div class="tooltip tooltip-left" data-tip="Editar Produto">
+                <x-button
+                    id="editar-btn-{{ $produto->ProdutoID }}"
+                    wire:key="editar-btn-{{ $produto->ProdutoID }}"
+                    icon="o-pencil"
+                    @click="$dispatch('produto::atualizar', { id: {{ $produto->ProdutoID }} })"
+                    spinner class="btn-sm btn-primary"
+                />
+            </div>
+
+            <div class="tooltip tooltip-left" data-tip="Matérias-primas">
+                <x-button
+                    id="materia-btn-{{ $produto->ProdutoID }}"
+                    wire:key="materia-btn-{{ $produto->ProdutoID }}"
+                    icon="o-eye-dropper"
+                    @click="$dispatch('produto::relacionar-materia', { id: {{ $produto->ProdutoID }} })"
+                    spinner class="btn-sm btn-secondary"
+                />
+            </div>
 
 {{--            @unless($produto->Ativo == false)--}}
 {{--                <x-button--}}
@@ -79,6 +91,7 @@
     {{ $this->itens->links() }}
 
     <livewire:produto.atualizar/>
+    <livewire:produto.relacionar-materia-prima/>
 {{--    <livewire:produto.arquivar/>--}}
 {{--    <livewire:produto.restaurar/>--}}
 </div>

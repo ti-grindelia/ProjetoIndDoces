@@ -19,10 +19,9 @@ class MateriaPrima extends Model
 
     protected $fillable = [
         'CodigoAlternativo',
-        'Nome',
+        'Descricao',
         'Unidade',
-        'Valor',
-        'CustoMedio',
+        'PrecoCompra',
         'Ativo'
     ];
 }
