@@ -32,8 +32,7 @@ class Index extends Component
     public function tabelaCabecalho(): array
     {
         return [
-            Cabecalho::make('MateriaPrimaID', '#'),
-            Cabecalho::make('CodigoAlternativo', 'Cod.Alternativo'),
+            Cabecalho::make('CodigoAlternativo', '#'),
             Cabecalho::make('Descricao', 'Descrição'),
             Cabecalho::make('Unidade', 'Unidade'),
             Cabecalho::make('PrecoCompra', 'Preço Compra (R$)'),

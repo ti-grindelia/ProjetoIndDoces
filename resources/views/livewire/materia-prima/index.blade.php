@@ -27,9 +27,6 @@
     </div>
 
     <x-table :headers="$this->cabecalhos" :rows="$this->itens">
-        @scope('header_MateriaPrimaID', $headers)
-        <x-tabela.th :$headers nome="materiaPrimaID"/>
-        @endscope
 
         @scope('header_CodAlternativo', $headers)
         <x-tabela.th :$headers nome="codAlternativo"/>
