@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Traits\Models\SalvaEmMaiusculo;
 use App\Traits\Models\TemPesquisa;
 use Database\Factories\EmpresaFactory;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -12,6 +13,7 @@ class Empresa extends Model
     /** @use HasFactory<EmpresaFactory> */
     use HasFactory;
     use TemPesquisa;
+    use SalvaEmMaiusculo;
 
     protected   $table              = 'Empresas';
     protected   $primaryKey         = 'EmpresaID';

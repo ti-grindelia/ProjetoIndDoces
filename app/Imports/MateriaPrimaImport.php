@@ -10,10 +10,10 @@ use Maatwebsite\Excel\Concerns\WithHeadingRow;
 class MateriaPrimaImport implements ToModel, WithHeadingRow
 {
     /**
-    * @param array $row
-    *
-    * @return Model|null
-    */
+     * @param array $row
+     *
+     * @return Model|MateriaPrima|null
+     */
     public function model(array $row): Model|MateriaPrima|null
     {
         $row = collect($row)

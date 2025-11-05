@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Traits\Models\SalvaEmMaiusculo;
 use App\Traits\Models\TemPesquisa;
 use Database\Factories\UserFactory;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -13,6 +14,7 @@ class Usuario extends Authenticatable
     /** @use HasFactory<UserFactory> */
     use HasFactory, Notifiable;
     use TemPesquisa;
+    use SalvaEmMaiusculo;
 
     protected   $table              = 'Usuarios';
     protected   $primaryKey         = 'UsuarioID';
