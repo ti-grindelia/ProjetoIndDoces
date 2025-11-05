@@ -6,6 +6,7 @@ use App\Traits\Models\SalvaEmMaiusculo;
 use App\Traits\Models\TemPesquisa;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 
 class MateriaPrima extends Model
 {
@@ -24,6 +25,33 @@ class MateriaPrima extends Model
         'Descricao',
         'Unidade',
         'PrecoCompra',
+        'PermiteComposicao',
+        'Rendimento',
         'Ativo'
     ];
+
+    protected $casts = [
+        'PermiteComposicao' => 'boolean',
+        'Ativo' => 'boolean'
+    ];
+
+    public function componentes(): BelongsToMany
+    {
+        return $this->belongsToMany(
+            MateriaPrima::class,
+            'MateriaPrimaComposicao',
+            'MateriaPrimaBaseID',
+            'MateriaPrimaFilhaID'
+        )->withPivot(['Quantidade', 'CustoUnitario', 'CustoTotal']);
+    }
+
+    public function utilizadaEm(): BelongsToMany
+    {
+        return $this->belongsToMany(
+            MateriaPrima::class,
+            'MateriaPrimaComposicao',
+            'MateriaPrimaFilhaID',
+            'MateriaPrimaBaseID'
+        )->withPivot(['Quantidade', 'CustoUnitario', 'CustoTotal']);
+    }
 }

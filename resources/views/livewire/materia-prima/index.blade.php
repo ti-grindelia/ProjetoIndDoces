@@ -47,30 +47,48 @@
 
         @scope('actions', $materiaPrima)
         <div class="flex items-center space-x-2">
-            <x-button
-                id="editar-btn-{{ $materiaPrima->MateriaPrimaID }}"
-                wire:key="editar-btn-{{ $materiaPrima->MateriaPrimaID }}"
-                icon="o-pencil"
-                @click="$dispatch('materia-prima::atualizar', { id: {{ $materiaPrima->MateriaPrimaID }} })"
-                spinner class="btn-sm btn-primary"
-            />
+            <div class="tooltip tooltip-left" data-tip="Editar matéria-prima">
+                <x-button
+                    id="editar-btn-{{ $materiaPrima->MateriaPrimaID }}"
+                    wire:key="editar-btn-{{ $materiaPrima->MateriaPrimaID }}"
+                    icon="o-pencil"
+                    @click="$dispatch('materia-prima::atualizar', { id: {{ $materiaPrima->MateriaPrimaID }} })"
+                    spinner class="btn-sm btn-primary"
+                />
+            </div>
+
+            @if($materiaPrima->PermiteComposicao)
+                <div class="tooltip tooltip-left" data-tip="Montar composição">
+                    <x-button
+                        id="composicao-btn-{{ $materiaPrima->MateriaPrimaID }}"
+                        wire:key="composicao-btn-{{ $materiaPrima->MateriaPrimaID }}"
+                        icon="o-bars-3-center-left"
+                        @click="$dispatch('materia::relacionar-composicao', { id: {{ $materiaPrima->MateriaPrimaID }} })"
+                        spinner class="btn-sm btn-secondary"
+                    />
+                </div>
+            @endif
 
             @unless($materiaPrima->Ativo == false)
-                <x-button
-                    id="arquivar-btn-{{ $materiaPrima->MateriaPrimaID }}"
-                    wire:key="arquivar-btn-{{ $materiaPrima->MateriaPrimaID }}"
-                    icon="o-trash"
-                    @click="$dispatch('materia-prima::arquivar', { id: {{ $materiaPrima->MateriaPrimaID }} })"
-                    spinner class="btn-sm btn-error"
-                />
+                <div class="tooltip tooltip-left" data-tip="Excluir matéria-prima">
+                    <x-button
+                        id="arquivar-btn-{{ $materiaPrima->MateriaPrimaID }}"
+                        wire:key="arquivar-btn-{{ $materiaPrima->MateriaPrimaID }}"
+                        icon="o-trash"
+                        @click="$dispatch('materia-prima::arquivar', { id: {{ $materiaPrima->MateriaPrimaID }} })"
+                        spinner class="btn-sm btn-error"
+                    />
+                </div>
             @else
-                <x-button
-                    id="restaurar-btn-{{ $materiaPrima->MateriaPrimaID }}"
-                    wire:key="restaurar-btn-{{ $materiaPrima->MateriaPrimaID }}"
-                    icon="o-arrow-uturn-left"
-                    @click="$dispatch('materia-prima::restaurar', { id: {{ $materiaPrima->MateriaPrimaID }} })"
-                    spinner class="btn-sm btn-warning"
-                />
+                <div class="tooltip tooltip-left" data-tip="Restaurar matéria-prima">
+                    <x-button
+                        id="restaurar-btn-{{ $materiaPrima->MateriaPrimaID }}"
+                        wire:key="restaurar-btn-{{ $materiaPrima->MateriaPrimaID }}"
+                        icon="o-arrow-uturn-left"
+                        @click="$dispatch('materia-prima::restaurar', { id: {{ $materiaPrima->MateriaPrimaID }} })"
+                        spinner class="btn-sm btn-warning"
+                    />
+                </div>
             @endunless
         </div>
         @endscope
@@ -80,6 +98,7 @@
 
     <livewire:materia-prima.criar/>
     <livewire:materia-prima.atualizar/>
+    <livewire:materia-prima.relacionar-composicao/>
     <livewire:materia-prima.arquivar/>
     <livewire:materia-prima.restaurar/>
 </div>

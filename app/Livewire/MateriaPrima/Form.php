@@ -17,6 +17,10 @@ class Form extends BaseForm
 
     public float $precoCompra = 0.00;
 
+    public bool $permiteComposicao = false;
+
+    public float $rendimento = 0.00;
+
     public bool $ativo = true;
 
     public function rules(): array
@@ -26,6 +30,8 @@ class Form extends BaseForm
             'descricao'         => ['required', 'min:3', 'max:255'],
             'unidade'           => ['required', 'in:L,KG'],
             'precoCompra'       => ['nullable', 'min:0', 'numeric'],
+            'permiteComposicao' => ['boolean'],
+            'rendimento'        => ['nullable', 'min:0', 'numeric'],
             'ativo'             => ['boolean'],
         ];
     }
@@ -38,6 +44,8 @@ class Form extends BaseForm
         $this->descricao         = $materiaPrima->Descricao;
         $this->unidade           = $materiaPrima->Unidade;
         $this->precoCompra       = $materiaPrima->PrecoCompra;
+        $this->permiteComposicao = $materiaPrima->PermiteComposicao;
+        $this->rendimento        = $materiaPrima->Rendimento ?? 0.00;
         $this->ativo             = $materiaPrima->Ativo;
     }
 
@@ -50,6 +58,8 @@ class Form extends BaseForm
             'Descricao'         => $this->descricao,
             'Unidade'           => $this->unidade,
             'PrecoCompra'       => $this->precoCompra,
+            'PermiteComposicao' => $this->permiteComposicao,
+            'Rendimento'        => $this->rendimento,
             'Ativo'             => $this->ativo,
         ]);
 
@@ -64,6 +74,8 @@ class Form extends BaseForm
         $this->materiaPrima->Descricao         = $this->descricao;
         $this->materiaPrima->Unidade           = $this->unidade;
         $this->materiaPrima->PrecoCompra       = $this->precoCompra;
+        $this->materiaPrima->PermiteComposicao = $this->permiteComposicao;
+        $this->materiaPrima->Rendimento        = $this->rendimento;
         $this->materiaPrima->Ativo             = $this->ativo;
 
         $this->materiaPrima->update();

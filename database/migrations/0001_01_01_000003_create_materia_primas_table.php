@@ -17,6 +17,8 @@ return new class extends Migration
             $table->string('Descricao', 255);
             $table->string('Unidade', 5);
             $table->decimal('PrecoCompra', 10, 2)->nullable();
+            $table->tinyInteger('PermiteComposicao')->default(0);
+            $table->decimal('Rendimento', 10, 4)->nullable();
             $table->tinyInteger('Ativo')->default(1);
         });
     }

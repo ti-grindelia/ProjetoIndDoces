@@ -16,10 +16,24 @@
                     placeholder="Un. medida"
                 />
             </div>
-            <x-input label="Preço Compra" wire:model="form.precoCompra" type="number"/>
+            <div class="flex-1">
+                <x-input label="Preço Compra" wire:model="form.precoCompra" type="number" step="0.01"/>
+            </div>
         </div>
 
+        <x-checkbox label="Permite Composição" wire:model.live="form.permiteComposicao" class="checkbox-info" tight/>
         <x-checkbox label="Ativo" wire:model="form.ativo" class="checkbox-info" tight/>
+
+        @if ($form->permiteComposicao)
+            <div class="mb-4">
+                <x-input
+                    label="Rendimento (KG, UND ou LT)"
+                    wire:model="form.rendimento"
+                    step="0.001"
+                    placeholder="Ex: 0.125"
+                />
+            </div>
+        @endif
 
         <x-slot:actions>
             <x-button label="Cancelar" @click="$wire.modal = false"/>
