@@ -22,13 +22,21 @@
             <div class="w-1/2">
                 <x-input label="Preço" wire:model="form.preco" readonly/>
             </div>
+
             <div class="flex-1">
                 <x-input label="Custo Médio" wire:model="form.custoMedio"/>
             </div>
         </div>
 
-        <x-select class="mb-2" icon="o-home-modern" :options="$this->empresas" wire:model="form.empresa"
+        <div class="flex flex-row space-x-4 mb-2 w-full">
+            <div class="w-1/2">
+                <x-input label="Peso UND." wire:model="form.pesoUnidade"/>
+            </div>
+            <div class="flex-1">
+                <x-select class="mb-2" icon="o-home-modern" :options="$this->empresas" wire:model="form.empresa"
                     label="Empresa" placeholder="Selecione a empresa"/>
+            </div>
+        </div>
 
         <x-checkbox label="Fracionado" wire:model="form.fracionado" class="checkbox-info" tight disabled/>
         <x-checkbox label="Ativo" wire:model="form.ativo" class="checkbox-info" tight disabled/>

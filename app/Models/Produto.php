@@ -32,6 +32,7 @@ class Produto extends Model
         'EmpresaID',
         'Fracionado',
         'UltimaSincronizacao',
+        'PesoUnidade',
         'Ativo'
     ];
 

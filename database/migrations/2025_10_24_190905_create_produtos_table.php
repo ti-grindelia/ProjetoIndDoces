@@ -24,6 +24,7 @@ return new class extends Migration
             $table->foreign('EmpresaID')->references('EmpresaID')->on('Empresas');
             $table->boolean('Fracionado')->default(false);
             $table->dateTime('UltimaSincronizacao')->nullable();
+            $table->decimal('PesoUnidade', 10, 4)->nullable();
             $table->boolean('Ativo')->default(true);
         });
     }

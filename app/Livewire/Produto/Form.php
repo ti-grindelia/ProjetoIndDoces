@@ -21,6 +21,8 @@ class Form extends BaseForm
 
     public float $custoMedio = 0.00;
 
+    public float $pesoUnidade = 0.00;
+
     public ?int $empresa = null;
 
     public bool $fracionado = false;
@@ -36,6 +38,7 @@ class Form extends BaseForm
             'categoria'         => ['required', 'min:3', 'max:255'],
             'preco'             => ['required', 'min:0', 'numeric'],
             'custoMedio'        => ['nullable', 'min:0', 'numeric'],
+            'pesoUnidade'       => ['nullable', 'min:0', 'numeric'],
             'empresa'           => ['nullable', 'integer', 'exists:Empresas,EmpresaID'],
             'fracionado'        => ['boolean'],
             'ativo'             => ['boolean'],
@@ -52,6 +55,7 @@ class Form extends BaseForm
         $this->categoria         = $produto->Categoria;
         $this->preco             = $produto->Preco;
         $this->custoMedio        = $produto->CustoMedio ?? 0.00;
+        $this->pesoUnidade       = $produto->PesoUnidade ?? 0.00;
         $this->empresa           = $produto->EmpresaID ?? 0;
         $this->fracionado        = $produto->Fracionado;
         $this->ativo             = $produto->Ativo;
@@ -63,6 +67,7 @@ class Form extends BaseForm
 
         $this->produto->EmpresaID = $this->empresa;
         $this->produto->CustoMedio = $this->custoMedio;
+        $this->produto->pesoUnidade = $this->pesoUnidade;
 
         $this->produto->update();
     }
