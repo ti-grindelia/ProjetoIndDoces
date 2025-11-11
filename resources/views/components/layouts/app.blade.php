@@ -34,14 +34,14 @@
                     <div class="flex items-center gap-2 w-fit">
                         <span class="text-4xl">🍬</span>
                         <span class="font-bold text-3xl me-3 bg-gradient-to-r from-blue-500 to-purple-300 bg-clip-text text-transparent">
-                            Indústria
+                            DBR | SBR
                         </span>
                     </div>
                 </div>
 
                 <!-- Display when collapsed -->
                 <div class="display-when-collapsed hidden mx-5 mt-5 mb-1 h-[48px]">
-                    <span class="text-5xl">🍬</span>
+                    <span class="text-4xl">🍬</span>
                 </div>
             </a>
 {{--            <x-app-brand class="px-5 pt-4" />--}}
@@ -53,14 +53,16 @@
                 @if($user = auth()->user())
                     <x-menu-separator />
 
-                    <x-list-item :item="$user" value="name" sub-value="email" no-separator no-hover class="-mx-2 !-my-2 rounded">
+                    <x-list-item :item="$user" value="Nome" sub-value="Usuario" no-separator no-hover class="-mx-2 !-my-2 rounded">
                         <x-slot:actions>
-                            <div class="tooltip tooltip-left" data-tip="logoff">
-                                <x-button
-                                    icon="o-power"
-                                    class="btn-circle btn-ghost btn-xs"
-                                    @click="$dispatch('logout')">
-                                </x-button>
+                            <div class="flex items-center w-full">
+                                <div class="ml-3 tooltip tooltip-left" data-tip="logoff">
+                                    <x-button
+                                        icon="o-power"
+                                        class="btn-circle btn-ghost btn-xs"
+                                        @click="$dispatch('logout')">
+                                    </x-button>
+                                </div>
                             </div>
                         </x-slot:actions>
                     </x-list-item>
@@ -71,10 +73,10 @@
                 <x-menu-item title="Home" icon="o-home" link="/" />
 
                 <x-menu-sub title="Cadastros" icon="o-pencil-square">
-                    <x-menu-item title="Usuário" icon="o-user" :link="route('usuario')" />
-                    <x-menu-item title="Empresa" icon="o-home-modern" :link="route('empresa')" />
-                    <x-menu-item title="Matéria-Prima" icon="o-eye-dropper" :link="route('materia-prima')" />
-                    <x-menu-item title="Produto" icon="o-cake" :link="route('produto')" />
+                    <x-menu-item title="Usuários" icon="o-user" :link="route('usuario')" />
+                    <x-menu-item title="Empresas" icon="o-home-modern" :link="route('empresa')" />
+                    <x-menu-item title="Matérias-Primas" icon="o-eye-dropper" :link="route('materia-prima')" />
+                    <x-menu-item title="Produtos" icon="o-cake" :link="route('produto')" />
                 </x-menu-sub>
 
             </x-menu>
