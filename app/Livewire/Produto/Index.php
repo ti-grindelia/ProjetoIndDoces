@@ -7,6 +7,7 @@ use App\Support\Table\Cabecalho;
 use App\Traits\Livewire\TemTabela;
 use Illuminate\Contracts\View\View;
 use Illuminate\Database\Eloquent\Builder;
+use Livewire\Attributes\On;
 use Livewire\Component;
 use Livewire\WithPagination;
 
@@ -17,6 +18,7 @@ class Index extends Component
 
     public bool $pesquisaInativos = false;
 
+    #[On('produto::recarregar')]
     public function render(): View
     {
         return view('livewire.produto.index');

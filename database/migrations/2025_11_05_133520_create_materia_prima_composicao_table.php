@@ -13,8 +13,8 @@ return new class extends Migration
     {
         Schema::create('MateriaPrimaComposicao', function (Blueprint $table) {
             $table->integer('MateriaPrimaComposicaoID')->primary()->autoIncrement();
-            $table->unsignedBigInteger('MateriaPrimaBaseID');
-            $table->unsignedBigInteger('MateriaPrimaFilhaID');
+            $table->integer('MateriaPrimaBaseID');
+            $table->integer('MateriaPrimaFilhaID');
             $table->decimal('Quantidade', 10, 4);
             $table->decimal('CustoUnitario', 10, 2)->nullable();
             $table->decimal('CustoTotal', 10, 2)->nullable();
