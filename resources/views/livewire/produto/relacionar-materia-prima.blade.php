@@ -13,6 +13,8 @@
                     no-result-text="Nenhum resultado encontrado"
                     single
                     required
+                    clearable
+                    height="max-h-40"
                 />
             </div>
 
@@ -37,30 +39,32 @@
                 @scope('expansion', $materia)
                     @if (!empty($materia['Composicoes']))
                         <div class="px-6">
-                            <table class="w-full text-xs" style="padding-left: 1.5rem">
-                                <colgroup>
-                                    <col style="width: 10%">
-                                    <col style="width: 30%">
-                                    <col style="width: 10%">
-                                    <col style="width: 10%">
-                                    <col style="width: 10%">
-                                    <col style="width: 15%">
-                                    <col style="width: 15%">
-                                </colgroup>
-                                <tbody>
-                                    @foreach ($materia['Composicoes'] as $comp)
-                                        <tr>
-                                            <td class="px-2 py-1">{{ $comp['CodigoAlternativo'] }}</td>
-                                            <td class="px-2 py-1">{{ $comp['Descricao'] }}</td>
-                                            <td class="px-2 py-1">{{ $comp['Unidade'] }}</td>
-                                            <td class="px-2 py-1">{{ $comp['Quantidade'] }}</td>
-                                            <td class="px-2 py-1"></td>
-                                            <td class="px-2 py-1"></td>
-                                            <td class="px-2 py-1"></td>
-                                        </tr>
-                                    @endforeach
-                                </tbody>
-                            </table>
+                            <div class="border-l-2 border-gray-400 pl-3">
+                                <table class="w-full text-xs" style="padding-left: 1.5rem">
+                                    <colgroup>
+                                        <col style="width: 10%">
+                                        <col style="width: 25%">
+                                        <col style="width: 15%">
+                                        <col style="width: 10%">
+                                        <col style="width: 10%">
+                                        <col style="width: 15%">
+                                        <col style="width: 15%">
+                                    </colgroup>
+                                    <tbody>
+                                        @foreach ($materia['Composicoes'] as $comp)
+                                            <tr>
+                                                <td class="px-2 py-1">{{ $comp['CodigoAlternativo'] }}</td>
+                                                <td class="px-2 py-1">{{ $comp['Descricao'] }}</td>
+                                                <td class="px-2 py-1">{{ $comp['Unidade'] }}</td>
+                                                <td class="px-2 py-1">{{ $comp['Quantidade'] }}</td>
+                                                <td class="px-2 py-1"></td>
+                                                <td class="px-2 py-1"></td>
+                                                <td class="px-2 py-1"></td>
+                                            </tr>
+                                        @endforeach
+                                    </tbody>
+                                </table>
+                            </div>
                         </div>
                     @else
                         <div class="px-6 py-3 text-xs text-white italic">

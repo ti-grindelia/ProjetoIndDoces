@@ -60,19 +60,32 @@ class RelacionarMateriaPrima extends Component
         $this->produto = Produto::query()->where('Ativo', true)->findOrFail($id);
 
         $this->materiasSelecionadas = ProdutoMateriaPrima::query()
-            ->where('ProdutoID', $this->produto->ProdutoID)
-            ->with('materiaPrima')
+            ->where('ProdutoID', $id)
+            ->with(['materiaPrima.componentes'])
             ->get()
-            ->map(fn($relacao) => [
-                'MateriaPrimaID' => $relacao->MateriaPrimaID,
-                'CodigoAlternativo' => $relacao->materiaPrima->CodigoAlternativo ?? '',
-                'Descricao' => $relacao->materiaPrima->Descricao ?? '',
-                'Unidade' => $relacao->Unidade,
-                'Quantidade' => $relacao->Quantidade,
-                'CustoUnitario' => $relacao->CustoUnitario,
-                'Custo' => number_format($relacao->Custo, 2),
-            ])
-            ->toArray();
+            ->map(function ($relacao) {
+                $materia = $relacao->materiaPrima;
+                $composicoes = [];
+
+                if ($materia && $materia->PermiteComposicao && $materia->componentes->isNotEmpty()) {
+                    $composicoes = $this->getComposicoes($materia);
+                }
+
+                return [
+                    'MateriaPrimaID' => $relacao->MateriaPrimaID,
+                    'CodigoAlternativo' => $materia->CodigoAlternativo ?? '',
+                    'Descricao' => $materia->Descricao ?? '',
+                    'Unidade' => $relacao->Unidade,
+                    'Quantidade' => $relacao->Quantidade,
+                    'CustoUnitario' => $relacao->CustoUnitario,
+                    'Custo' => number_format($relacao->Custo, 2),
+                    'PermiteComposicao' => $materia->PermiteComposicao ?? false,
+                    'Composicoes' => $composicoes,
+                ];
+            })
+        ->toArray();
+
+        $this->calcularTotais();
 
         $this->modal = true;
     }
@@ -123,20 +136,7 @@ class RelacionarMateriaPrima extends Component
 
         $composicoes = [];
         if ($materia->PermiteComposicao && $materia->componentes->isNotEmpty()) {
-            $composicoes = $materia->componentes->map(function ($comp) {
-                $quant = $comp->pivot->Quantidade ?? 0;
-                $custoUnit = $comp->PrecoCompra ?? 0;
-                $custoTot = $custoUnit * $quant;
-
-                return [
-                    'CodigoAlternativo' => $comp->CodigoAlternativo,
-                    'Descricao' => $comp->Descricao,
-                    'Unidade' => $comp->Unidade,
-                    'Quantidade' => $quant,
-                    'CustoUnitario' => $custoUnit,
-                    'CustoTotal' => $custoTot,
-                ];
-            })->toArray();
+            $composicoes = $this->getComposicoes($materia);
         }
 
         $this->materiasSelecionadas[] = [
@@ -151,7 +151,7 @@ class RelacionarMateriaPrima extends Component
             'Composicoes' => $composicoes,
         ];
 
-        $this->recalcularTotais();
+        $this->calcularTotais();
         $this->reset('materiaPesquisada', 'quantidadeMateria');;
     }
 
@@ -163,7 +163,7 @@ class RelacionarMateriaPrima extends Component
             fn($materia) => $materia['MateriaPrimaID'] !== $id
         );
 
-        $this->recalcularTotais();
+        $this->calcularTotais();
     }
 
     public function salvar(): void
@@ -196,7 +196,7 @@ class RelacionarMateriaPrima extends Component
         $this->dispatch('produto::recarregar')->to('produto.index');
     }
 
-    private function recalcularTotais(): void
+    private function calcularTotais(): void
     {
         $this->custoMaterialDireto = 0;
         $this->pesoTotal = 0;
@@ -227,5 +227,27 @@ class RelacionarMateriaPrima extends Component
         $this->pesoTotal = number_format($this->pesoTotal, 4);
         $this->rendimento = number_format($this->rendimento, 2);
         $this->custoPorUnidade = number_format($this->custoPorUnidade, 2);
+    }
+
+    /**
+     * @param $materia
+     * @return mixed
+     */
+    public function getComposicoes($materia): mixed
+    {
+        return $materia->componentes->map(function ($comp) {
+            $quant = $comp->pivot->Quantidade ?? 0;
+            $custoUnit = $comp->PrecoCompra ?? 0;
+            $custoTot = $custoUnit * $quant;
+
+            return [
+                'CodigoAlternativo' => $comp->CodigoAlternativo,
+                'Descricao' => $comp->Descricao,
+                'Unidade' => $comp->Unidade,
+                'Quantidade' => $quant,
+                'CustoUnitario' => $custoUnit,
+                'CustoTotal' => $custoTot,
+            ];
+        })->toArray();
     }
 }
