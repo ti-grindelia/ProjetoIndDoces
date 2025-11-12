@@ -7,6 +7,7 @@ use App\Livewire\Empresa;
 use App\Livewire\Produto;
 use App\Livewire\MateriaPrima;
 use App\Livewire\Welcome;
+use App\Livewire\Pedido;
 
 Route::get('/login', Login::class)->name('login');
 Route::get('/registro', Registro::class)->name('auth.registro');
@@ -19,4 +20,7 @@ Route::middleware(['auth'])->group(function () {
     Route::get('/empresa', Empresa\Index::class)->name('empresa');
     Route::get('/materia-prima', MateriaPrima\Index::class)->name('materia-prima');
     Route::get('/produto', Produto\Index::class)->name('produto');
+
+    Route::get('/pedido', Pedido\Index::class)->name('pedido');
+    Route::get('/novoPedido', Pedido\Criar::class)->name('novoPedido');
 });

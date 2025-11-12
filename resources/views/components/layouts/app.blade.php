@@ -79,6 +79,11 @@
                     <x-menu-item title="Produtos" icon="o-cake" :link="route('produto')" />
                 </x-menu-sub>
 
+                <x-menu-sub title="Pedidos" icon="o-document-text">
+                    <x-menu-item title="Novo Pedido" icon="o-document-plus" :link="route('novoPedido')" />
+                    <x-menu-item title="Pedidos" icon="o-document-magnifying-glass" :link="route('pedido')" />
+                </x-menu-sub>
+
             </x-menu>
         </x-slot:sidebar>
 
