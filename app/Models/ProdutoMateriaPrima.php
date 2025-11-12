@@ -26,7 +26,7 @@ class ProdutoMateriaPrima extends Model
 
     public function produto(): BelongsTo
     {
-        return $this->belongsTo(Produto::class, 'ProdutoMateriaPrimaID', 'ProdutoID');
+        return $this->belongsTo(Produto::class, 'ProdutoID', 'ProdutoID');
     }
 
     public function materiaPrima(): BelongsTo

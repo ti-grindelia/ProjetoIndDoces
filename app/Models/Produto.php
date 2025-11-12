@@ -8,6 +8,7 @@ use Database\Factories\ProdutoFactory;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 
 class Produto extends Model
 {
@@ -48,5 +49,10 @@ class Produto extends Model
     public function empresa(): BelongsTo
     {
         return $this->belongsTo(Empresa::class, 'EmpresaID');
+    }
+
+    public function materiasPrimas(): BelongsToMany
+    {
+        return $this->belongsToMany(MateriaPrima::class, 'ProdutoMateriaPrima', 'ProdutoID', 'MateriaPrimaID');
     }
 }

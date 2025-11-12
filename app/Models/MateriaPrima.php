@@ -54,4 +54,9 @@ class MateriaPrima extends Model
             'MateriaPrimaBaseID'
         )->withPivot(['Quantidade', 'CustoUnitario', 'CustoTotal']);
     }
+
+    public function materiasProdutos(): BelongsToMany
+    {
+        return $this->belongsToMany(ProdutoMateriaPrima::class, 'ProdutoMateriaPrima', 'MateriaPrimaID', 'MateriaPrimaID');
+    }
 }
