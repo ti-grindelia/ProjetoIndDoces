@@ -37,15 +37,15 @@ class Form extends BaseForm
     public function rules(): array
     {
         return [
-            'cnpj'        => ['required', 'min:14', 'max:19'],
+            'cnpj'        => ['nullable', 'min:14', 'max:19'],
             'razaoSocial' => ['required', 'min:3', 'max:255'],
-            'cep'         => ['required', 'min:8', 'max:9'],
-            'endereco'    => ['required', 'min:3', 'max:255'],
-            'numero'      => ['required', 'min:1', 'max:10'],
+            'cep'         => ['nullable', 'min:8', 'max:9'],
+            'endereco'    => ['nullable', 'min:3', 'max:255'],
+            'numero'      => ['nullable', 'min:1', 'max:10'],
             'complemento' => ['nullable', 'min:3', 'max:255'],
-            'bairro'      => ['required', 'min:3', 'max:255'],
-            'cidade'      => ['required', 'min:3', 'max:255'],
-            'estado'      => ['required', 'min:2', 'max:2'],
+            'bairro'      => ['nullable', 'min:3', 'max:255'],
+            'cidade'      => ['nullable', 'min:3', 'max:255'],
+            'estado'      => ['nullable', 'min:2', 'max:2'],
             'telefone'    => ['nullable', 'min:10', 'max:16'],
             'email'       => ['nullable', 'email', 'max:255'],
             'ativo'       => ['boolean'],

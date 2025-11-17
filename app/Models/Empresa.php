@@ -38,7 +38,18 @@ class Empresa extends Model
 
     public function getEnderecoCompletoAttribute(): string
     {
-        return "$this->Endereco, $this->Numero - $this->Bairro, $this->Cidade/$this->Estado";
+        $partes = array_filter([
+            $this->Endereco,
+            $this->Numero ? ", {$this->Numero}" : null,
+            $this->Bairro ? " - {$this->Bairro}" : null,
+            ($this->Cidade && $this->Estado) ? "{$this->Cidade}/{$this->Estado}" : null,
+        ]);
+
+        if (empty($partes)) {
+            return '';
+        }
+
+        return implode(' ', $partes);
     }
 
     public function getCnpjFormatadoAttribute(): ?string
