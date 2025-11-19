@@ -25,10 +25,13 @@ class Form extends BaseForm
 
     public array $expanded = [];
 
-    protected $rules = [
-        'quantidade'        => ['required', 'numeric', 'min:0.1'],
-        'produtoPesquisado' => ['required', 'integer', 'exists:Produto,ProdutoID'],
-    ];
+    public function rules(): array
+    {
+        return [
+            'quantidade'        => ['required', 'numeric', 'min:0.1'],
+            'produtoPesquisado' => ['required', 'integer', 'exists:Produto,ProdutoID'],
+        ];
+    }
 
     public function adicionarProduto(): void
     {

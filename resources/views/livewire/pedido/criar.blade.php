@@ -20,81 +20,35 @@
         </div>
     </div>
 
-    <x-card class="mt-4 py-4">
-        <label class="block text-md font-semibold">
-            Pedido Itens
+    <div class="pl-4 mt-6">
+        <label class="block text-sm font-semibold mb-2">
+            Selecionar arquivo de pedido
         </label>
-
-        <hr class="my-4">
-
-        <x-form wire:submit="adicionarProduto" id="adicionar-produto-form">
-            <div class="flex flex-row gap-4 items-end">
-                <div class="w-1/3">
-                    <x-choices
-                        label="Produto"
-                        wire:model="form.produtoPesquisado"
-                        :options="$produtosParaPesquisar"
-                        searchable
-                        search-function="pesquisarProduto"
-                        no-result-text="Nenhum resultado encontrado"
-                        single
-                        required
-                        placeholder="Selecione um produto"
-                    />
-                </div>
-                <div class="w-1/5">
-                    <x-input
-                        label="Quantidade"
-                        type="number"
-                        min="0"
-                        step="0.1"
-                        wire:model="form.quantidade"
-                        placeholder="Informe a quantidade"
-                        required
-                    />
-                </div>
-                <div class="w-1/5">
-                    <x-button label="Adicionar Produto" type="submit" class="bg-blue-600 text-white" form="adicionar-produto-form"/>
-                </div>
+        <div class="flex flex-row gap-4 justify-start items-center">
+            <div class="w-1/2">
+                <x-file wire:model="arquivo" accept=".xls,.xlsx" required/>
             </div>
-        </x-form>
-
-        @if($form->produtosSelecionados)
-            <x-form id="confirmar-pedido-form" class="mt-4">
-                <x-table :headers="$form->cabecalho" :rows="$form->produtosSelecionados"
-                         wire:model="form.expanded"
-                         expandable
-                         expandable-key="ProdutoID"
-                         expandable-condition="PodeExpandir"
-                >
-
-                    @scope('expansion', $produto)
-                        @if(!empty($produto['MateriasPrimas']))
-                            @include('components.pedidos.materiais-tabela', ['materias' => $produto['MateriasPrimas']])
-                        @endif
-                    @endscope
-
-                    @scope('actions', $produto)
-                    <div class="flex items-center space-x-2">
-                        <x-button
-                            id="atualizar-btn-{{ $produto['ProdutoID'] }}"
-                            wire:key="atualizar-btn-{{ $produto['ProdutoID'] }}"
-                            icon="o-pencil"
-                            @click="$dispatch('produto-pedido::atualizar', { id: {{ $produto['ProdutoID'] }} })"
-                            spinner class="btn-sm btn-primary"
-                        />
-
-                        <x-button
-                            id="excluir-btn-{{ $produto['ProdutoID'] }}"
-                            wire:key="excluir-btn-{{ $produto['ProdutoID'] }}"
-                            icon="o-trash"
-                            @click="$dispatch('produto-pedido::excluir', { id: {{ $produto['ProdutoID'] }} })"
-                            spinner class="btn-sm btn-error"
-                        />
-                    </div>
-                    @endscope
-                </x-table>
-            </x-form>
+            <div class="w-1/3">
+                <x-button
+                    label="Processar"
+                    class="bg-blue-600 text-white hover:bg-blue-700 disabled:bg-gray-400 disabled:cursor-not-allowed"
+                    wire:click="processar"
+                    :disabled="!$arquivo"
+                    spinner="processar"/>
+            </div>
+        </div>
+        <div wire:loading wire:target="arquivo" class="mt-2 text-sm text-gray-500">
+            Carregando arquivo...
+        </div>
+    </div>
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                       
+    <x-card>
+        @if($produtosProcessados)
+            <div class="flex flex-row gap-4 mt-6">
+                <x-pedidos.tabela-doces :produtos-industria-doces="$produtosIndustriaDoces"/>
+                <x-pedidos.tabela-salgados :produtos-industria-salgados="$produtosIndustriaSalgados"/>
+            </div>
         @endif
     </x-card>
+
 </x-card>
