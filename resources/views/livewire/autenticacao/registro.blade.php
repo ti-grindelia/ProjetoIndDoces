@@ -12,7 +12,7 @@
                 </a>
                 <div>
                     <x-button label="Limpar" type="reset"/>
-                    <x-button label="Registrar" type="submit" class="bg-blue-600 text-white" spinner="submit"/>
+                    <x-button label="Registrar" type="submit" class="bg-blue-600 text-white" spinner="registrar"/>
                 </div>
             </div>
         </x-slot:actions>
