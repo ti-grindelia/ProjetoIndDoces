@@ -223,10 +223,10 @@ class RelacionarMateriaPrima extends Component
             $this->custoPorUnidade = $this->custoMaterialDireto / $this->rendimento;
         }
 
-        $this->custoMaterialDireto = number_format($this->custoMaterialDireto, 2);
-        $this->pesoTotal = number_format($this->pesoTotal, 4);
-        $this->rendimento = number_format($this->rendimento, 2);
-        $this->custoPorUnidade = number_format($this->custoPorUnidade, 2);
+        $this->custoMaterialDireto = round($this->custoMaterialDireto, 2);
+        $this->pesoTotal = round($this->pesoTotal, 4);
+        $this->rendimento = round((float)$this->rendimento, 2);
+        $this->custoPorUnidade = round($this->custoPorUnidade, 2);
     }
 
     /**
