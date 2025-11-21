@@ -26,7 +26,7 @@ class RelacionarComposicao extends Component
 
     public array $cabecalho = [
         ['key' => 'CodigoAlternativo', 'label' => '#'],
-        ['key' => 'Nome', 'label' => 'Nome'],
+        ['key' => 'Descricao', 'label' => 'Descricao'],
         ['key' => 'Unidade', 'label' => 'Unidade'],
         ['key' => 'Quantidade', 'label' => 'Quantidade'],
         ['key' => 'CustoUnitario', 'label' => 'Custo unit.'],
@@ -127,7 +127,8 @@ class RelacionarComposicao extends Component
         $custoTotalBase = 0;
 
         foreach ($this->materiasSelecionadas as $materia) {
-            $custo = (float) str_replace(',', '.', $materia['Custo']);
+            $custo = $this->formatarNumero((string) ($materia['Custo'] ?? 0));
+
             $custoTotalBase += $custo;
 
             MateriaPrimaComposicao::updateOrCreate(
@@ -153,5 +154,33 @@ class RelacionarComposicao extends Component
 
         $this->reset('materiasSelecionadas');
         $this->modal = false;
+    }
+
+    function formatarNumero(string $value): float
+    {
+        $s = preg_replace('/[^\d\.,\-]/', '', trim($value));
+
+        if ($s === '' || $s === null) {
+            return 0.0;
+        }
+
+        $contaPonto = substr_count($s, '.');
+        $contaVirgula = substr_count($s, ',');
+
+        if ($contaPonto > 0 && $contaVirgula > 0) {
+            $primeiroPonto = strpos($s, '.');
+            $primeiraVirgula = strpos($s, ',');
+
+            if ($primeiraVirgula < $primeiroPonto) {
+                $s = str_replace(',', '', $s);
+            } else {
+                $s = str_replace('.', '', $s);
+                $s = str_replace(',', '.', $s);
+            }
+        } elseif ($contaVirgula > 0) {
+            $s = str_replace(',', '.', $s);
+        }
+
+        return (float) $s;
     }
 }

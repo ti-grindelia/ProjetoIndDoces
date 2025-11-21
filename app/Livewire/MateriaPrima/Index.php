@@ -35,7 +35,7 @@ class Index extends Component
             Cabecalho::make('CodigoAlternativo', '#'),
             Cabecalho::make('Descricao', 'Descrição'),
             Cabecalho::make('Unidade', 'Unidade'),
-            Cabecalho::make('PrecoCompra', 'Preço Compra (R$)'),
+            Cabecalho::make('PrecoCompraPorUnidade', 'Preço Compra (R$)'),
         ];
     }
 

@@ -1,4 +1,4 @@
-<x-modal wire:model="modal" title="Composição da matéria-prima" separator class="backdrop-blur" box-class="min-w-2xl"
+<x-modal wire:model="modal" title="Composição da matéria-prima" separator class="backdrop-blur" box-class="min-w-3xl"
     subtitle="Você está relacionando os ingredientes da matéria-prima {{ $materiaBase?->Descricao }}">
 
     <x-form wire:submit="adicionarMateria" id="adicionar-materia-form">

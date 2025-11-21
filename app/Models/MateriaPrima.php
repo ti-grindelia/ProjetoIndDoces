@@ -59,4 +59,9 @@ class MateriaPrima extends Model
     {
         return $this->belongsToMany(ProdutoMateriaPrima::class, 'ProdutoMateriaPrima', 'MateriaPrimaID', 'MateriaPrimaID');
     }
+
+    public function getPrecoCompraPorUnidadeAttribute(): string
+    {
+        return number_format($this->PrecoCompra, 2, ',', '.') . ' / ' . strtolower($this->Unidade);
+    }
 }
