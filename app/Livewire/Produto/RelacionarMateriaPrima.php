@@ -103,16 +103,16 @@ class RelacionarMateriaPrima extends Component
             ]);
     }
 
-    public function updatedMateriaPesquisada($id): void
-    {
-        $materia = MateriaPrima::find($id);
-
-        if ($materia && $materia->PermiteComposicao && $materia->Rendimento) {
-            $this->quantidadeMateria = $materia->Rendimento;
-        } else {
-            $this->quantidadeMateria = null;
-        }
-    }
+//    public function updatedMateriaPesquisada($id): void
+//    {
+//        $materia = MateriaPrima::find($id);
+//
+//        if ($materia && $materia->PermiteComposicao && $materia->Rendimento) {
+//            $this->quantidadeMateria = $materia->Rendimento;
+//        } else {
+//            $this->quantidadeMateria = null;
+//        }
+//    }
 
     public function adicionarMateria(): void
     {
@@ -128,11 +128,7 @@ class RelacionarMateriaPrima extends Component
             return;
         }
 
-        $quantidade = $materia->PermiteComposicao && $materia->Rendimento
-            ? $materia->Rendimento
-            : $this->quantidadeMateria;
-
-        $custoTotal = $materia->PrecoCompra * $quantidade;
+        $custoTotal = $materia->PrecoCompra * $this->quantidadeMateria;
 
         $composicoes = [];
         if ($materia->PermiteComposicao && $materia->componentes->isNotEmpty()) {
@@ -202,8 +198,6 @@ class RelacionarMateriaPrima extends Component
         $this->pesoTotal = 0;
         $this->custoPorUnidade = 0;
 
-        $pesoPorUnidade = (float) ($this->produto->PesoUnidade ?? 0);
-
         foreach ($this->materiasSelecionadas as $materia) {
             $quant = (float) ($materia['Quantidade'] ?? 0);
             $custoUnit = (float) ($materia['CustoUnitario'] ?? 0);
@@ -213,11 +207,7 @@ class RelacionarMateriaPrima extends Component
             $this->pesoTotal += $quant;
         }
 
-        if ($pesoPorUnidade > 0) {
-            $this->rendimento = round($this->pesoTotal / $pesoPorUnidade, 2);
-        } else {
-            $this->rendimento = 0;
-        }
+        $this->rendimento = $this->produto->RendimentoProducao ?? 0;
 
         if ($this->rendimento > 0) {
             $this->custoPorUnidade = $this->custoMaterialDireto / $this->rendimento;

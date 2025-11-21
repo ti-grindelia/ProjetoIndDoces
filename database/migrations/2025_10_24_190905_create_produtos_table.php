@@ -25,6 +25,7 @@ return new class extends Migration
             $table->boolean('Fracionado')->default(false);
             $table->dateTime('UltimaSincronizacao')->nullable();
             $table->decimal('PesoUnidade', 10, 4)->nullable();
+            $table->decimal('RendimentoProducao', 10, 4)->nullable();
             $table->boolean('Ativo')->default(true);
         });
     }

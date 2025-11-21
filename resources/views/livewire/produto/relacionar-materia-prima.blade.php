@@ -6,7 +6,7 @@
             <div class="w-2/3">
                 <x-choices
                     :options="$materiasParaPesquisar"
-                    wire:model.live="materiaPesquisada"
+                    wire:model="materiaPesquisada"
                     label="Matéria-prima"
                     search-function="pesquisarMateria"
                     searchable

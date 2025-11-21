@@ -34,6 +34,7 @@ class Produto extends Model
         'Fracionado',
         'UltimaSincronizacao',
         'PesoUnidade',
+        'RendimentoProducao',
         'Ativo'
     ];
 

@@ -33,10 +33,12 @@
                 <x-input label="Peso UND." wire:model="form.pesoUnidade"/>
             </div>
             <div class="flex-1">
-                <x-select class="mb-2" icon="o-home-modern" :options="$this->empresas" wire:model="form.empresa"
-                    label="Empresa" placeholder="Selecione a empresa"/>
+                <x-input label="Rendimento Produção" wire:model="form.rendimentoProducao"/>
             </div>
         </div>
+
+        <x-select class="mb-2" icon="o-home-modern" :options="$this->empresas" wire:model="form.empresa"
+            label="Empresa" placeholder="Selecione a empresa"/>
 
         <x-checkbox label="Fracionado" wire:model="form.fracionado" class="checkbox-info" tight disabled/>
         <x-checkbox label="Ativo" wire:model="form.ativo" class="checkbox-info" tight disabled/>
