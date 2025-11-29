@@ -64,4 +64,19 @@ class MateriaPrima extends Model
     {
         return number_format($this->PrecoCompra, 2, ',', '.') . ' / ' . strtolower($this->Unidade);
     }
+
+    public function produtos(): BelongsToMany
+    {
+        return $this->belongsToMany(
+            Produto::class,
+            'ProdutosMateriasPrimas',
+            'MateriaPrimaID',
+            'ProdutoID'
+        )->withPivot(['Quantidade', 'CustoUnitario', 'Custo']);
+    }
+
+    public function composicoes(): BelongsToMany
+    {
+        return $this->componentes();
+    }
 }

@@ -11,7 +11,6 @@ use Livewire\Component;
 use Livewire\WithFileUploads;
 use Maatwebsite\Excel\Facades\Excel;
 
-
 class Criar extends Component
 {
     use WithFileUploads;
@@ -27,6 +26,8 @@ class Criar extends Component
     public array $produtosIndustriaDoces = [];
 
     public array $produtosIndustriaSalgados = [];
+
+    public array $materiasTotais = [];
 
     public function render(): View
     {
@@ -51,8 +52,12 @@ class Criar extends Component
         $this->produtosProcessados = [];
         $this->produtosIndustriaDoces = [];
         $this->produtosIndustriaSalgados = [];
+        $this->materiasTotais = [];
 
-        $produtos = Produto::all()->keyBy('CodigoAlternativo');
+        $produtos = Produto::with('materiasPrimas')
+            ->orderBy('ProdutoID')
+            ->get()
+            ->keyBy('CodigoAlternativo');
 
         $linhas = Excel::toArray(new PedidoImport, $this->arquivo)[0];
 
@@ -81,6 +86,21 @@ class Criar extends Component
             if (!$produtos->has($codigo)) continue;
 
             $produto = $produtos[$codigo];
+            $rendimento = $produto->RendimentoProducao ?: 1;
+            $fator = $quantidade / $rendimento;
+
+            foreach ($produto->materiasPrimas as $mp) {
+                $quantBase = $mp->pivot->Quantidade * $fator;
+
+                if ($mp->composicoes()->exists()) {
+                    foreach ($mp->composicoes as $filha) {
+                        $qtdFilha = $quantBase * $filha->pivot->Quantidade;
+                        $this->somarMateriaTotal($filha, $qtdFilha);
+                    }
+                } else {
+                    $this->somarMateriaTotal($mp, $quantBase);
+                }
+            }
 
             $produtoProcessado = [
                 'ProdutoID'  => $produto->ProdutoID,
@@ -88,6 +108,7 @@ class Criar extends Component
                 'Descricao'  => $produto->Descricao,
                 'Quantidade' => $quantidade,
                 'Industria'  => $produto->EmpresaID,
+                'MateriasPrimas' => $this->calcularMateriasProduto($produto, $quantidade),
             ];
 
             $this->produtosProcessados[] = $produtoProcessado;
@@ -98,5 +119,60 @@ class Criar extends Component
                 $this->produtosIndustriaSalgados[] = $produtoProcessado;
             }
         }
+    }
+
+    private function somarMateriaTotal($mp, $quantidade): void
+    {
+        $id = $mp->MateriaPrimaID;
+
+        if (!isset($this->materiasTotais[$id])) {
+            $this->materiasTotais[$id] = [
+            'MateriaPrimaID' => $id,
+            'Descricao' => $mp->Descricao,
+            'Unidade' => $mp->Unidade,
+            'Total' => 0,
+            ];
+        }
+
+        $this->materiasTotais[$id]['Total'] += $quantidade;
+    }
+
+    private function calcularMateriasProduto($produto, $quantidade): array
+    {
+        $rendimento = $produto->RendimentoProducao ?: 1;
+        $fator = $quantidade / $rendimento;
+
+        $materias = [];
+
+        foreach ($produto->materiasPrimas as $mp) {
+            $quantBase = $mp->pivot->Quantidade * $fator;
+
+            if ($mp->composicoes()->exists()) {
+                foreach ($mp->composicoes as $filha) {
+
+                    $totalFilha = $quantBase * $filha->pivot->Quantidade;
+
+                    $materias[] = [
+                        'CodigoAlternativo' => $filha->CodigoAlternativo,
+                        'Descricao' => $filha->Descricao,
+                        'Unidade' => $filha->Unidade,
+                        'QuantidadeBase' => $filha->pivot->Quantidade,
+                        'Total' => $totalFilha,
+                    ];
+                }
+            }
+
+            else {
+                $materias[] = [
+                    'CodigoAlternativo' => $mp->CodigoAlternativo,
+                    'Descricao' => $mp->Descricao,
+                    'Unidade' => $mp->Unidade,
+                    'QuantidadeBase' => $mp->pivot->Quantidade,
+                    'Total' => $quantBase,
+                ];
+            }
+        }
+
+        return $materias;
     }
 }

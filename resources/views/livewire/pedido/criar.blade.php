@@ -41,13 +41,86 @@
             Carregando arquivo...
         </div>
     </div>
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                       
-    <x-card>
+
+    <x-card class="mx-auto p-12">
         @if($produtosProcessados)
-            <div class="flex flex-row gap-4 mt-6">
-                <x-pedidos.tabela-doces :produtos-industria-doces="$produtosIndustriaDoces"/>
-                <x-pedidos.tabela-salgados :produtos-industria-salgados="$produtosIndustriaSalgados"/>
+            <div x-data="{ aba: 'doces' }" class="mt-6">
+                <div class="flex border-b border-gray-300 mb-4">
+                    <button
+                        class="px-4 py-2 text-md font-semibold cursor-pointer"
+                        :class="aba === 'doces'
+                            ? 'border-b-2 border-blue-600 text-blue-600'
+                            : 'text-gray-500 hover:text-gray-700'"
+                        @click="aba = 'doces'"
+                    >
+                        🧁 DBR
+                    </button>
+                    <button
+                        class="px-4 py-2 text-md font-semibold ml-4 cursor-pointer"
+                        :class="aba === 'salgados'
+                            ? 'border-b-2 border-blue-600 text-blue-600'
+                            : 'text-gray-500 hover:text-gray-700'"
+                        @click="aba = 'salgados'"
+                    >
+                        🥟 SBR
+                    </button>
+                    <button
+                        class="px-4 py-2 text-md font-semibold ml-4 cursor-pointer"
+                        :class="aba === 'materias-primas'
+                            ? 'border-b-2 border-blue-600 text-blue-600'
+                            : 'text-gray-500 hover:text-gray-700'"
+                        @click="aba = 'salgados'"
+                    >
+                        🧪 Matérias-Primas
+                    </button>
+                </div>
+
+                <div x-show="aba === 'doces'">
+                    <x-pedidos.tabela-doces :produtos-industria-doces="$produtosIndustriaDoces"/>
+                </div>
+
+                <div x-show="aba === 'salgados'">
+                    <x-pedidos.tabela-salgados :produtos-industria-salgados="$produtosIndustriaSalgados"/>
+                </div>
+
+                <div x-show="aba === 'materias-primas'">
+
+                </div>
+
             </div>
+
+{{--            <div class="w-full mt-10">--}}
+{{--                <div class="shadow rounded-xl p-4 border border-gray-700">--}}
+{{--                    <h2 class="text-lg font-bold text-blue-700 mb-4">--}}
+{{--                        🧪 Materiais Totais Necessários--}}
+{{--                    </h2>--}}
+
+{{--                    <div class="max-h-[800px] overflow-y-auto pr-2">--}}
+{{--                        @forelse($materiasTotais as $mp)--}}
+{{--                            <div class="flex justify-between items-center border-b last:border-none py-2">--}}
+
+{{--                                <div>--}}
+{{--                                    <div class="font-medium">--}}
+{{--                                        {{ $mp['Descricao'] }}--}}
+{{--                                    </div>--}}
+
+{{--                                    <span class="text-sm text-gray-500 block">--}}
+{{--                                        Unidade: {{ $mp['Unidade'] }}--}}
+{{--                                    </span>--}}
+{{--                                </div>--}}
+
+{{--                                <div class="text-right font-bold text-indigo-700">--}}
+{{--                                    {{ number_format($mp['Total'], 3, ',', '.') }}--}}
+{{--                                    {{ $mp['Unidade'] }}--}}
+{{--                                </div>--}}
+
+{{--                            </div>--}}
+{{--                        @empty--}}
+{{--                            <p class="text-gray-500 text-sm">Nenhuma matéria-prima encontrada.</p>--}}
+{{--                        @endforelse--}}
+{{--                    </div>--}}
+{{--                </div>--}}
+{{--            </div>--}}
         @endif
     </x-card>
 
