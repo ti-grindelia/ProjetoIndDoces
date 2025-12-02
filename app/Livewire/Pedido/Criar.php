@@ -127,14 +127,16 @@ class Criar extends Component
 
         if (!isset($this->materiasTotais[$id])) {
             $this->materiasTotais[$id] = [
-            'MateriaPrimaID' => $id,
-            'Descricao' => $mp->Descricao,
-            'Unidade' => $mp->Unidade,
-            'Total' => 0,
+                'CodigoAlternativo' => $mp->CodigoAlternativo,
+                'MateriaPrimaID' => $id,
+                'Descricao' => $mp->Descricao,
+                'Unidade' => $mp->Unidade,
+                'Total' => 0,
             ];
         }
 
         $this->materiasTotais[$id]['Total'] += $quantidade;
+        $this->materiasTotais[$id]['Total'] = round($this->materiasTotais[$id]['Total'], 3);
     }
 
     private function calcularMateriasProduto($produto, $quantidade): array
@@ -174,5 +176,10 @@ class Criar extends Component
         }
 
         return $materias;
+    }
+
+    public function concluirPedido(): void
+    {
+
     }
 }

@@ -31,6 +31,8 @@
 
                             <td class="py-1 text-left">
                                 {{ number_format($mp['Total'], 3, '.', '.') }}
+                                &nbsp;
+                                {{ $mp['Unidade'] }}
                             </td>
                         </tr>
                     @endforeach
