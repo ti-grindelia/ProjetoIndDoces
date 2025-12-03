@@ -81,7 +81,7 @@
 
                 <x-menu-sub title="Pedidos" icon="o-document-text">
                     <x-menu-item title="Novo Pedido" icon="o-document-plus" :link="route('novoPedido')" />
-                    <x-menu-item title="Pedidos" icon="o-document-magnifying-glass" :link="route('pedido')" />
+                    <x-menu-item title="Pedidos" icon="o-document-magnifying-glass" :link="route('pedidos')" />
                 </x-menu-sub>
 
             </x-menu>

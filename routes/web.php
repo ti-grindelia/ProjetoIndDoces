@@ -21,6 +21,6 @@ Route::middleware(['auth'])->group(function () {
     Route::get('/materia-prima', MateriaPrima\Index::class)->name('materia-prima');
     Route::get('/produto', Produto\Index::class)->name('produto');
 
-    Route::get('/pedido', Pedido\Index::class)->name('pedido');
+    Route::get('/pedidos', Pedido\Index::class)->name('pedidos');
     Route::get('/novoPedido', Pedido\Criar::class)->name('novoPedido');
 });

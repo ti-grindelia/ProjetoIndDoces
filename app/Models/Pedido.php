@@ -2,11 +2,14 @@
 
 namespace App\Models;
 
+use App\Traits\Models\TemPesquisa;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class Pedido extends Model
 {
+    use TemPesquisa;
+
     protected $table = 'Pedidos';
     protected $primaryKey = 'PedidoID';
     public $timestamps = false;
@@ -24,6 +27,11 @@ class Pedido extends Model
         'CanceladoPor'
     ];
 
+    protected $casts = [
+        'DataInclusao' => 'datetime',
+        'CustoTotal'   => 'decimal:2',
+    ];
+
     public function empresa(): BelongsTo
     {
         return $this->belongsTo(Empresa::class, 'EmpresaID');
@@ -32,5 +40,19 @@ class Pedido extends Model
     public function usuario(): BelongsTo
     {
         return $this->belongsTo(Usuario::class, 'UsuarioID');
+    }
+
+    public function getDataFormatadaAttribute(): string
+    {
+        return $this->DataInclusao
+            ? $this->DataInclusao->format('d/m/Y H:i')
+            : '-';
+    }
+
+    public function getCustoFormatadoAttribute(): string
+    {
+        return $this->CustoTotal
+            ? 'R$ ' . number_format($this->CustoTotal, 2, ',', '.')
+            : 'R$ 0,00';
     }
 }
