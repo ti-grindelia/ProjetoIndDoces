@@ -1,4 +1,9 @@
 <x-card class="py-4 mt-10">
+
+    @if(session('success'))
+        <x-toast />
+    @endif
+
     <div class="flex flex-row justify-start items-center gap-16">
         <label class="block text-lg font-semibold">
             Pedido #{{ $proximoPedidoID }}

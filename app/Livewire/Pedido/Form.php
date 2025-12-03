@@ -2,71 +2,120 @@
 
 namespace App\Livewire\Pedido;
 
-use App\Models\MateriaPrima;
-use App\Models\Produto;
-use App\Models\ProdutoMateriaPrima;
+use App\Models\Pedido;
+use App\Models\PedidoItens;
+use App\Models\PedidoMateriasPrimas;
+use Illuminate\Support\Facades\DB;
 use Livewire\Form as BaseForm;
+use Throwable;
 
 class Form extends BaseForm
 {
-    public ?int $produtoPesquisado = null;
+    public array $produtosIndustriaDoces = [];
 
-    public ?float $quantidade = null;
+    public array $produtosIndustriaSalgados = [];
 
-    public array $produtosSelecionados = [];
+    public float $custoDoces = 0;
 
-    public array $cabecalho = [
-        ['key' => 'CodigoAlternativo', 'label' => '#'],
-        ['key' => 'Descricao', 'label' => 'Descrição'],
-        ['key' => 'Categoria', 'label' => 'Categoria'],
-        ['key' => 'Custo', 'label' => 'Custo'],
-        ['key' => 'Quantidade', 'label' => 'Quantidade']
-    ];
+    public float $custoSalgados = 0;
 
-    public array $expanded = [];
-
-    public function rules(): array
+    /**
+     * @throws Throwable
+     */
+    public function concluir(): void
     {
-        return [
-            'quantidade'        => ['required', 'numeric', 'min:0.1'],
-            'produtoPesquisado' => ['required', 'integer', 'exists:Produto,ProdutoID'],
-        ];
+        DB::beginTransaction();
+
+        try {
+            $this->calcularCustos();
+
+            $this->criarPedido(
+                empresaID: 1,
+                produtos: $this->produtosIndustriaDoces,
+                custoTotal: $this->custoDoces,
+            );
+            $this->criarPedido(
+                empresaID: 2,
+                produtos: $this->produtosIndustriaSalgados,
+                custoTotal: $this->custoSalgados,
+            );
+
+            DB::commit();
+        } catch (Throwable $e) {
+            DB::rollBack();
+            throw $e;
+        }
     }
 
-    public function adicionarProduto(): void
+    private function calcularCustos(): void
     {
-        if (!$this->produtoPesquisado || !$this->quantidade) {
-            return;
+        $this->custoDoces = 0;
+        $this->custoSalgados = 0;
+
+        foreach ($this->produtosIndustriaDoces as $produto) {
+            $this->custoDoces += array_sum(array_column($produto['MateriasPrimas'] ?? [], 'CustoTotal'));
+        }
+        foreach ($this->produtosIndustriaSalgados as $produto) {
+            $this->custoSalgados += array_sum(array_column($produto['MateriasPrimas'] ?? [], 'CustoTotal'));
+        }
+    }
+
+    public function criarPedido(int $empresaID, array $produtos, float $custoTotal): ?Pedido
+    {
+        if ($custoTotal <= 0 || empty($produtos)) {
+            return null;
         }
 
-        $produto = Produto::query()
-            ->where('Ativo', true)
-            ->find($this->produtoPesquisado);
+        $pedido = Pedido::query()->create([
+            'EmpresaID' => $empresaID,
+            'UsuarioID' => auth()->id(),
+            'DataInclusao' => now(),
+            'Status' => 'Aberto',
+            'CustoTotal' => $custoTotal
+        ]);
 
-        if (!$produto) return;
+        $this->inserirItens($pedido->PedidoID, $produtos);
 
-        $materias = ProdutoMateriaPrima::query()
-            ->where('ProdutoID', $this->produtoPesquisado)
-            ->with(['materiaPrima', 'materiaPrima.componentes'])
-            ->get();
+        return $pedido;
+    }
 
-        if ($produto->Fracionado == 0 && floor($this->quantidade) !== $this->quantidade) {
-            $this->addError('quantidade', 'Este produto não pode ser fracionado');
-            return;
+    private function inserirItens(int $pedidoID, array $produtos): void
+    {
+        $itens = [];
+        $materias = [];
+
+        foreach ($produtos as $produto) {
+
+            $custoProduto = array_sum(array_column($produto['MateriasPrimas'] ?? [], 'CustoTotal'));
+
+            $itens[] = [
+                'PedidoID' => $pedidoID,
+                'ProdutoID' => $produto['ProdutoID'],
+                'Quantidade' => $produto['Quantidade'],
+                'CustoTotal' => $custoProduto
+            ];
+
+            foreach ($produto['MateriasPrimas'] as $mp) {
+
+                if (empty($mp['MateriaPrimaID'])) {
+                    continue;
+                }
+
+                $materias[] = [
+                    'PedidoID' => $pedidoID,
+                    'MateriaPrimaID' => $mp['MateriaPrimaID'],
+                    'Quantidade' => $mp['Total'],
+                    'CustoTotal' => $mp['CustoTotal']
+                ];
+            }
         }
 
-        $this->produtosSelecionados[] = [
-            'ProdutoID' => $produto->ProdutoID,
-            'CodigoAlternativo' => $produto->CodigoAlternativo,
-            'Descricao' => $produto->Descricao,
-            'Categoria' => $produto->Categoria,
-            'Custo' => $produto->CustoMedio,
-            'Quantidade' => $this->quantidade,
-            'MateriasPrimas' => $materias->toArray(),
-            'PodeExpandir' => $materias->isNotEmpty(),
-        ];
+        if (!empty($itens)) {
+            PedidoItens::query()->insert($itens);
+        }
 
-        $this->reset('produtoPesquisado', 'quantidade');
-        $this->resetErrorBag();
+        if (!empty($materias)) {
+            PedidoMateriasPrimas::query()->insert($materias);
+        }
     }
 }
