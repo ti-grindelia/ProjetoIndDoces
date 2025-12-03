@@ -3,9 +3,8 @@
 namespace App\Livewire\MateriaPrima;
 
 use App\Models\MateriaPrima;
-use App\Models\MateriaPrimaComposicao;
+use App\Services\MateriaPrimaComposicaoService;
 use Illuminate\Contracts\View\View;
-use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Support\Collection;
 use Livewire\Attributes\On;
 use Livewire\Component;
@@ -24,6 +23,8 @@ class RelacionarComposicao extends Component
 
     public array $materiasSelecionadas = [];
 
+    private MateriaPrimaComposicaoService $service;
+
     public array $cabecalho = [
         ['key' => 'CodigoAlternativo', 'label' => '#'],
         ['key' => 'Descricao', 'label' => 'Descricao'],
@@ -32,6 +33,11 @@ class RelacionarComposicao extends Component
         ['key' => 'CustoUnitario', 'label' => 'Custo unit.'],
         ['key' => 'Custo', 'label' => 'Custo'],
     ];
+
+    public function boot(MateriaPrimaComposicaoService $service): void
+    {
+        $this->service = $service;
+    }
 
     public function render(): View
     {
@@ -47,63 +53,30 @@ class RelacionarComposicao extends Component
     public function carregar(int $id): void
     {
         $this->materiaBase = MateriaPrima::query()->findOrFail($id);
-
-        $this->materiasSelecionadas = MateriaPrimaComposicao::query()
-            ->where('MateriaPrimaBaseID', $this->materiaBase->MateriaPrimaID)
-            ->with('materiaFilha')
-            ->get()
-            ->map(fn($relacao) => [
-                'MateriaPrimaID' => $relacao->MateriaPrimaFilhaID,
-                'CodigoAlternativo' => $relacao->materiaFilha->CodigoAlternativo ?? '',
-                'Descricao' => $relacao->materiaFilha->Descricao ?? '',
-                'Unidade' => $relacao->materiaFilha->Unidade ?? '',
-                'Quantidade' => $relacao->Quantidade,
-                'CustoUnitario' => $relacao->CustoUnitario,
-                'Custo' => number_format($relacao->CustoTotal, 2, '.', ','),
-            ])
-            ->toArray();
-
+        $this->materiasSelecionadas = $this->service->carregarComposicoes($this->materiaBase);
         $this->modal = true;
     }
 
     public function pesquisarMateria(?string $valor = null): void
     {
-        $this->materiasParaPesquisar = MateriaPrima::query()
-            ->when($valor, fn(Builder $q) => $q->where('Descricao', 'like', "%{$valor}%"))
-            ->where('Ativo', true)
-            ->orderBy('Descricao')
-            ->get()
-            ->map(fn($materia) => [
-                'id' => $materia->MateriaPrimaID,
-                'name' => $materia->Descricao . ' - ' . $materia->Unidade,
-            ]);
+        $this->materiasParaPesquisar = $this->service->pesquisar($valor);
     }
 
     public function adicionarMateria(): void
     {
-        if (!$this->materiaFilhaPesquisada || !$this->quantidadeMateria) {
-            return;
-        }
+        if (!$this->materiaFilhaPesquisada || !$this->quantidadeMateria) return;
 
-        $materia = MateriaPrima::find($this->materiaFilhaPesquisada);
-
+        $materia = MateriaPrima::query()->find($this->materiaFilhaPesquisada);
         if (!$materia) return;
 
         if (collect($this->materiasSelecionadas)->contains('MateriaPrimaID', $materia->MateriaPrimaID)) {
             return;
         }
 
-        $custoTotal = $materia->PrecoCompra * $this->quantidadeMateria;
-
-        $this->materiasSelecionadas[] = [
-            'MateriaPrimaID' => $materia->MateriaPrimaID,
-            'CodigoAlternativo' => $materia->CodigoAlternativo,
-            'Nome' => $materia->Descricao,
-            'Unidade' => $materia->Unidade,
-            'Quantidade' => $this->quantidadeMateria,
-            'CustoUnitario' => $materia->PrecoCompra,
-            'Custo' => number_format($custoTotal, 2, '.', ','),
-        ];
+        $this->materiasSelecionadas[] = $this->service->adicionar(
+            $materia,
+            $this->quantidadeMateria
+        );
 
         $this->materiaFilhaPesquisada = null;
         $this->quantidadeMateria = null;
@@ -124,63 +97,12 @@ class RelacionarComposicao extends Component
             return;
         }
 
-        $custoTotalBase = 0;
-
-        foreach ($this->materiasSelecionadas as $materia) {
-            $custo = $this->formatarNumero((string) ($materia['Custo'] ?? 0));
-
-            $custoTotalBase += $custo;
-
-            MateriaPrimaComposicao::updateOrCreate(
-                [
-                    'MateriaPrimaBaseID' => $this->materiaBase->MateriaPrimaID,
-                    'MateriaPrimaFilhaID' => $materia['MateriaPrimaID'],
-                ],
-                [
-                    'Quantidade' => $materia['Quantidade'],
-                    'CustoUnitario' => $materia['CustoUnitario'],
-                    'CustoTotal' => $custo,
-                ]
-            );
-        }
-
-        $rendimento = $this->materiaBase->Rendimento ?: 1;
-
-        $precoCompra = $rendimento > 0 ? $custoTotalBase / $rendimento : $custoTotalBase;
-
-        $this->materiaBase->update([
-            'PrecoCompra' => $precoCompra,
-        ]);
+        $this->service->salvarComposicoes(
+            $this->materiaBase,
+            $this->materiasSelecionadas
+        );
 
         $this->reset('materiasSelecionadas');
         $this->modal = false;
-    }
-
-    function formatarNumero(string $value): float
-    {
-        $s = preg_replace('/[^\d\.,\-]/', '', trim($value));
-
-        if ($s === '' || $s === null) {
-            return 0.0;
-        }
-
-        $contaPonto = substr_count($s, '.');
-        $contaVirgula = substr_count($s, ',');
-
-        if ($contaPonto > 0 && $contaVirgula > 0) {
-            $primeiroPonto = strpos($s, '.');
-            $primeiraVirgula = strpos($s, ',');
-
-            if ($primeiraVirgula < $primeiroPonto) {
-                $s = str_replace(',', '', $s);
-            } else {
-                $s = str_replace('.', '', $s);
-                $s = str_replace(',', '.', $s);
-            }
-        } elseif ($contaVirgula > 0) {
-            $s = str_replace(',', '.', $s);
-        }
-
-        return (float) $s;
     }
 }
