@@ -117,6 +117,7 @@
                             label="Concluir"
                             class="bg-blue-600 text-white hover:bg-blue-700 disabled:bg-gray-400 disabled:cursor-not-allowed"
                             wire:click="concluirPedido"
+                            spinner="concluirPedido"
                         />
                     </div>
                 </div>

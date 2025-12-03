@@ -4,9 +4,12 @@ namespace App\Livewire\Pedido;
 
 use App\Imports\PedidoImport;
 use App\Models\Pedido;
+use App\Models\PedidoItens;
+use App\Models\PedidoMateriasPrimas;
 use App\Models\Produto;
 use Illuminate\Contracts\View\View;
 use Illuminate\Support\Carbon;
+use Illuminate\Support\Facades\DB;
 use Livewire\Component;
 use Livewire\WithFileUploads;
 use Maatwebsite\Excel\Facades\Excel;
@@ -28,6 +31,10 @@ class Criar extends Component
     public array $produtosIndustriaSalgados = [];
 
     public array $materiasTotais = [];
+
+    public float $custoDoces = 0;
+
+    public float $custoSalgados = 0;
 
     public function render(): View
     {
@@ -154,23 +161,37 @@ class Criar extends Component
 
                     $totalFilha = $quantBase * $filha->pivot->Quantidade;
 
+                    $precoFilha = $filha->PrecoCompra ?? 0;
+                    $custoFilha = $totalFilha * $precoFilha;
+
                     $materias[] = [
+                        'MateriaPrimaID' => $filha->MateriaPrimaID,
                         'CodigoAlternativo' => $filha->CodigoAlternativo,
                         'Descricao' => $filha->Descricao,
                         'Unidade' => $filha->Unidade,
                         'QuantidadeBase' => $filha->pivot->Quantidade,
                         'Total' => $totalFilha,
+                        'PrecoCompra' => $precoFilha,
+                        'CustoTotal' => round($custoFilha, 2)
                     ];
                 }
             }
 
             else {
+                $precoMP = $mp->PrecoCompra ?? 0;
+                $custoMP = $totalFilha ?? 0;
+
+                $custoMP = $quantBase * $precoMP;
+
                 $materias[] = [
+                    'MateriaPrimaID' => $mp->MateriaPrimaID,
                     'CodigoAlternativo' => $mp->CodigoAlternativo,
                     'Descricao' => $mp->Descricao,
                     'Unidade' => $mp->Unidade,
                     'QuantidadeBase' => $mp->pivot->Quantidade,
                     'Total' => $quantBase,
+                    'PrecoCompra' => $precoMP,
+                    'CustoTotal' => round($custoMP, 2)
                 ];
             }
         }
@@ -180,6 +201,86 @@ class Criar extends Component
 
     public function concluirPedido(): void
     {
+        DB::beginTransaction();
 
+        try {
+
+            $this->custoDoces = 0;
+            $this->custoSalgados = 0;
+
+            foreach ($this->produtosIndustriaDoces as $produto) {
+                $this->custoDoces += array_sum(array_column($produto['MateriasPrimas'] ?? [], 'CustoTotal'));
+            }
+
+            foreach ($this->produtosIndustriaSalgados as $produto) {
+                $this->custoSalgados += array_sum(array_column($produto['MateriasPrimas'] ?? [], 'CustoTotal'));
+            }
+
+            // FUNÇÃO PARA CRIAR PEDIDOS
+            $criarPedido = function ($empresaID, $produtos, $custoTotal) {
+
+                if ($custoTotal <= 0 || empty($produtos)) {
+                    return null;
+                }
+
+                $pedido = Pedido::create([
+                    'EmpresaID' => $empresaID,
+                    'UsuarioID' => auth()->id(),
+                    'DataInclusao' => now(),
+                    'Status' => 'Aberto',
+                    'CustoTotal' => $custoTotal
+                ]);
+
+                $itensInsert = [];
+                $materiasInsert = [];
+
+                foreach ($produtos as $produto) {
+
+                    $custoProduto = array_sum(array_column($produto['MateriasPrimas'] ?? [], 'CustoTotal'));
+
+                    $itensInsert[] = [
+                        'PedidoID' => $pedido->PedidoID,
+                        'ProdutoID' => $produto['ProdutoID'],
+                        'Quantidade' => $produto['Quantidade'],
+                        'CustoTotal' => $custoProduto
+                    ];
+
+                    if (!empty($produto['MateriasPrimas'])) {
+
+                        foreach ($produto['MateriasPrimas'] as $mp) {
+                            if (empty($mp['MateriaPrimaID'])) {
+                                continue;
+                            }
+
+                            $materiasInsert[] = [
+                                'PedidoID' => $pedido->PedidoID,
+                                'MateriaPrimaID' => $mp['MateriaPrimaID'],
+                                'Quantidade' => $mp['Total'],
+                                'CustoTotal' => $mp['CustoTotal']
+                            ];
+                        }
+                    }
+                }
+
+                if (!empty($itensInsert)) {
+                    PedidoItens::insert($itensInsert);
+                }
+
+                if (!empty($materiasInsert)) {
+                    PedidoMateriasPrimas::insert($materiasInsert);
+                }
+
+                return $pedido;
+            };
+
+            $criarPedido(1, $this->produtosIndustriaDoces, $this->custoDoces);
+            $criarPedido(2, $this->produtosIndustriaSalgados, $this->custoSalgados);
+
+            DB::commit();
+
+        } catch (\Exception $e) {
+            DB::rollBack();
+            dd($e->getMessage());
+        }
     }
 }
