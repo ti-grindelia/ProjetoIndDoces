@@ -92,6 +92,8 @@ class AtualizarForm extends Form
     {
         $pedido = Pedido::find($this->pedidoID);
         $pedido->Status = 'Producao';
+        $pedido->AlteradoEm = now();
+        $pedido->AlteradoPor = auth()->id();
         $pedido->save();
 
         $this->status = 'Producao';
@@ -102,6 +104,8 @@ class AtualizarForm extends Form
     {
         $pedido = Pedido::find($this->pedidoID);
         $pedido->Status = 'Finalizado';
+        $pedido->AlteradoEm = now();
+        $pedido->AlteradoPor = auth()->id();
         $pedido->save();
 
         $this->status = 'Finalizado';

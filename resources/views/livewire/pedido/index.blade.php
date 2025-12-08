@@ -50,13 +50,18 @@
         <x-tabela.th :$headers nome="custo"/>
         @endscope
 
-{{--        @scope('cell_status_formatado', $pedido)--}}
-{{--        @dump($pedido->status_formatado)--}}
-{{--        <x-badge :value="$pedido->status_formatado"--}}
-{{--                 class="@if($pedido->status_formatado == 'Aberto') badge-warning @endif--}}
-{{--                 "--}}
-{{--        />--}}
-{{--        @endscope--}}
+        @scope('cell_status_formatado', $pedido)
+        @dump($pedido->status_formatado)
+        @if($pedido->status_formatado == 'Aberto')
+            <x-badge :value="$pedido->status_formatado" class="badge-warning badge-soft"/>
+        @elseif($pedido->status_formatado == 'Produção')
+            <x-badge :value="$pedido->status_formatado" class="badge-info badge-soft"/>
+        @elseif($pedido->status_formatado == 'Finalizado')
+            <x-badge :value="$pedido->status_formatado" class="badge-success badge-soft"/>
+        @elseif($pedido->status_formatado == 'Cancelado')
+            <x-badge :value="$pedido->status_formatado" class="badge-error badge-soft"/>
+        @endif
+        @endscope
 
         @scope('actions', $pedido)
         <div class="flex items-center space-x-2">

@@ -6,9 +6,12 @@ use App\Models\Pedido;
 use Illuminate\Contracts\View\View;
 use Livewire\Attributes\On;
 use Livewire\Component;
+use Mary\Traits\Toast;
 
 class Atualizar extends Component
 {
+    use Toast;
+
     public AtualizarForm $form;
 
     public bool $modal = false;
@@ -40,6 +43,7 @@ class Atualizar extends Component
             'Aberto'     => 'Avançar para Produção',
             'Producao'   => 'Finalizar Pedido',
             'Finalizado' => 'Pedido Finalizado',
+            'Cancelado'  => 'Pedido Cancelado',
             ''           => ''
         };
     }
@@ -57,6 +61,7 @@ class Atualizar extends Component
             'Finalizado' => null,
         };
 
+        $this->success('Status do pedido atualizado com sucesso');
         $this->dispatch('pedidos::recarregar');
     }
 }
