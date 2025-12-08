@@ -70,15 +70,17 @@
                 />
             </div>
 
-            <div class="tooltip tooltip-left" data-tip="Cancelar Pedido">
-                <x-button
-                    id="cancelar-btn-{{ $pedido->PedidoID }}"
-                    wire:key="cancelar-btn-{{ $pedido->PedidoID }}"
-                    icon="o-x-circle"
-                    @click="$dispatch('pedido::cancelar', { id: {{ $pedido->PedidoID }} })"
-                    spinner class="btn-sm btn-error"
-                />
-            </div>
+            @unless($pedido->Status == 'Cancelado' || $pedido->Status == 'Finalizado' || $pedido->Status == 'Producao')
+                <div class="tooltip tooltip-left" data-tip="Cancelar Pedido">
+                    <x-button
+                        id="cancelar-btn-{{ $pedido->PedidoID }}"
+                        wire:key="cancelar-btn-{{ $pedido->PedidoID }}"
+                        icon="o-x-circle"
+                        @click="$dispatch('pedido::cancelar', { id: {{ $pedido->PedidoID }} })"
+                        spinner class="btn-sm btn-error"
+                    />
+                </div>
+            @endunless
         </div>
         @endscope
     </x-table>
@@ -86,4 +88,5 @@
     {{ $this->itens->links() }}
 
     <livewire:pedido.atualizar/>
+    <livewire:pedido.cancelar/>
 </div>
