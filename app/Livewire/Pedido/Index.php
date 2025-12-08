@@ -50,7 +50,7 @@ class Index extends Component
         return [
             Cabecalho::make('PedidoID', '#'),
             Cabecalho::make('empresa.RazaoSocial', 'Empresa'),
-            Cabecalho::make('Status', 'Status'),
+            Cabecalho::make('status_formatado', 'Status'),
             Cabecalho::make('data_formatada', 'Data'),
             Cabecalho::make('custo_formatado', 'Custo (R$)'),
         ];

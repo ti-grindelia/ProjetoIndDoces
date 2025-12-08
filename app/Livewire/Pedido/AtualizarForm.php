@@ -18,6 +18,8 @@ class AtualizarForm extends Form
 
     public string $status = '';
 
+    public string $statusFormatado = '';
+
     public float $custoTotal = 0;
 
     public ?string $alteradoEm = null;
@@ -30,6 +32,8 @@ class AtualizarForm extends Form
 
     public array $itens = [];
 
+    public array $materiasPrimas = [];
+
     public function setPedido(Pedido $pedido): void
     {
         $this->pedido = $pedido;
@@ -39,6 +43,11 @@ class AtualizarForm extends Form
         $this->usuario      = $pedido->usuario->Nome;
         $this->dataInclusao = $pedido->DataInclusao->format('Y-m-d');
         $this->status       = $pedido->Status;
+        if ($this->status == 'Producao') {
+            $this->statusFormatado = 'Produção';
+        } else {
+            $this->statusFormatado = $this->status;
+        }
         $this->custoTotal   = $pedido->CustoTotal;
         $this->alteradoEm   = $pedido->AlteradoEm;
         $this->alteradoPor  = $pedido->AlteradoPor;
@@ -55,11 +64,47 @@ class AtualizarForm extends Form
                 'MateriasPrimas' => $item->produto->materiasPrimas->map(function ($mp) {
                     return [
                         'MateriaPrimaID' => $mp->MateriaPrimaID,
-                        'Descricao' => $mp->Descricao,
-                        'Quantidade' => $mp->pivot->Quantidade,
+                        'Descricao'      => $mp->Descricao,
+                        'Quantidade'     => $mp->pivot->Quantidade,
+                        'Unidade'        => $mp->Unidade,
                     ];
                 })->toArray()
             ];
         })->toArray();
+
+        $this->materiasPrimas = collect($this->itens)
+            ->pluck('MateriasPrimas')
+            ->flatten(1)
+            ->groupBy('MateriaPrimaID')
+            ->map(function ($grupo) {
+                return [
+                    'MateriaPrimaID' => $grupo->first()['MateriaPrimaID'],
+                    'Descricao'      => $grupo->first()['Descricao'],
+                    'Quantidade'     => $grupo->sum('Quantidade'),
+                    'Unidade'        => $grupo->first()['Unidade']
+                ];
+            })
+            ->values()
+            ->toArray();
+    }
+
+    public function atualizarStatusParaProducao(): void
+    {
+        $pedido = Pedido::find($this->pedidoID);
+        $pedido->Status = 'Producao';
+        $pedido->save();
+
+        $this->status = 'Producao';
+        $this->statusFormatado = 'Produção';
+    }
+
+    public function atualizarStatusParaFinalizado(): void
+    {
+        $pedido = Pedido::find($this->pedidoID);
+        $pedido->Status = 'Finalizado';
+        $pedido->save();
+
+        $this->status = 'Finalizado';
+        $this->statusFormatado = 'Finalizado';
     }
 }

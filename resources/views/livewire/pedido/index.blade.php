@@ -50,6 +50,14 @@
         <x-tabela.th :$headers nome="custo"/>
         @endscope
 
+{{--        @scope('cell_status_formatado', $pedido)--}}
+{{--        @dump($pedido->status_formatado)--}}
+{{--        <x-badge :value="$pedido->status_formatado"--}}
+{{--                 class="@if($pedido->status_formatado == 'Aberto') badge-warning @endif--}}
+{{--                 "--}}
+{{--        />--}}
+{{--        @endscope--}}
+
         @scope('actions', $pedido)
         <div class="flex items-center space-x-2">
             <div class="tooltip tooltip-left" data-tip="Visualizar Pedido">

@@ -39,6 +39,7 @@ class Atualizar extends Component
         return match ($this->form->status) {
             'Aberto'     => 'Avançar para Produção',
             'Producao'   => 'Finalizar Pedido',
+            'Finalizado' => 'Pedido Finalizado',
             ''           => ''
         };
     }
@@ -46,5 +47,16 @@ class Atualizar extends Component
     public function getStatusButtonDisabledProperty(): bool
     {
         return in_array($this->form->status, ['Finalizado', 'Cancelado', '']);
+    }
+
+    public function proximoStatus(): void
+    {
+        match ($this->form->status) {
+            'Aberto'     => $this->form->atualizarStatusParaProducao(),
+            'Producao'   => $this->form->atualizarStatusParaFinalizado(),
+            'Finalizado' => null,
+        };
+
+        $this->dispatch('pedidos::recarregar');
     }
 }

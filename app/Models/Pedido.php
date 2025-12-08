@@ -66,4 +66,15 @@ class Pedido extends Model
             ? 'R$ ' . number_format($this->CustoTotal, 2, ',', '.')
             : 'R$ 0,00';
     }
+
+    public function getStatusFormatadoAttribute(): string
+    {
+        return match ($this->attributes['Status'] ?? null) {
+            'Aberto' => 'Aberto',
+            'Producao' => 'Produção',
+            'Finalizado' => 'Finalizado',
+            'Cancelado' => 'Cancelado',
+            default => $this->attributes['Status'] ?? '',
+        };
+    }
 }
