@@ -5,6 +5,7 @@ namespace App\Models;
 use App\Traits\Models\TemPesquisa;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class Pedido extends Model
 {
@@ -40,6 +41,16 @@ class Pedido extends Model
     public function usuario(): BelongsTo
     {
         return $this->belongsTo(Usuario::class, 'UsuarioID');
+    }
+
+    public function itens(): HasMany
+    {
+        return $this->hasMany(PedidoItens::class, 'PedidoID');
+    }
+
+    public function materiasPrimas(): HasMany
+    {
+        return $this->hasMany(PedidoMateriasPrimas::class, 'PedidoID');
     }
 
     public function getDataFormatadaAttribute(): string

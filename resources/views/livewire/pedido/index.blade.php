@@ -76,4 +76,6 @@
     </x-table>
 
     {{ $this->itens->links() }}
+
+    <livewire:pedido.atualizar/>
 </div>
