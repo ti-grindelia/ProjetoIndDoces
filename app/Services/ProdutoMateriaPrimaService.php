@@ -112,7 +112,7 @@ class ProdutoMateriaPrimaService
             'Custo'             => number_format($relacao->Custo, 2),
             'PermiteComposicao' => $materia->PermiteComposicao ?? false,
             'Composicoes'       => $materia->PermiteComposicao
-                ? $this->getComposicoes($materia)
+                ? $this->calcularSubcomponentesProporcionais($materia, $relacao->Quantidade)
                 : [],
         ];
     }
@@ -131,7 +131,7 @@ class ProdutoMateriaPrimaService
             'Custo'             => number_format($custo, 2),
             'PermiteComposicao' => $materia->PermiteComposicao,
             'Composicoes'       => $materia->PermiteComposicao
-                ? $this->getComposicoes($materia)
+                ? $this->calcularSubcomponentesProporcionais($materia, $quantidade)
                 : [],
         ];
     }
@@ -151,5 +151,33 @@ class ProdutoMateriaPrimaService
                 'CustoTotal'        => $unit * $q,
             ];
         })->toArray();
+    }
+
+    private function calcularSubcomponentesProporcionais($materia, float $quantidadeUsada): array
+    {
+        if (!$materia->PermiteComposicao || $quantidadeUsada <= 0) return [];
+
+        $rendimento = $materia->Rendimento ?? 1;
+
+        $resultado = [];
+
+        foreach ($materia->componentes as $comp) {
+            $quantidadeOriginal = $comp->pivot->Quantidade;
+            $quantidadeProporcional = ($quantidadeOriginal / $rendimento) * $quantidadeUsada;
+
+            $unitario = $comp->PrecoCompra;
+            $custo = $unitario * $quantidadeProporcional;
+
+            $resultado[] = [
+                'CodigoAlternativo' => $comp->CodigoAlternativo,
+                'Descricao'         => $comp->Descricao,
+                'Unidade'           => $comp->Unidade,
+                'Quantidade'        => round($quantidadeProporcional, 3),
+                'CustoUnitario'     => $unitario,
+                'CustoTotal'        => $custo,
+            ];
+        }
+
+        return $resultado;
     }
 }
