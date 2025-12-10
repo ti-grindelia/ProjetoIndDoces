@@ -51,7 +51,6 @@
         @endscope
 
         @scope('cell_status_formatado', $pedido)
-        @dump($pedido->status_formatado)
         @if($pedido->status_formatado == 'Aberto')
             <x-badge :value="$pedido->status_formatado" class="badge-warning badge-soft"/>
         @elseif($pedido->status_formatado == 'Produção')
