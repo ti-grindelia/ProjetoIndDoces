@@ -92,17 +92,21 @@ class PedidoProcessamentoService
 
     private function processarMateriasTotais($produto, float $quantidade): void
     {
-        $rendimento = $produto->RendimentoProducao ?: 1;
-        $fator = $quantidade / $rendimento;
-
         foreach ($produto->materiasPrimas as $mp) {
-            $quantBase = $mp->pivot->Quantidade * $fator;
+            $quantBase = $mp->pivot->Quantidade * $quantidade;
 
             if ($mp->composicoes->count()) {
+
+                $rendimentoComp = $mp->Rendimento ?: 1;
+
                 foreach ($mp->composicoes as $filha) {
-                    $qtdFilha = $quantBase * $filha->pivot->Quantidade;
+                    $qtdOriginalFilha = $filha->pivot->Quantidade;
+
+                    $qtdFilha = ($qtdOriginalFilha / $rendimentoComp) * $quantBase;
+
                     $this->somarMateriaTotal($filha, $qtdFilha);
                 }
+
             } else {
                 $this->somarMateriaTotal($mp, $quantBase);
             }
@@ -160,8 +164,12 @@ class PedidoProcessamentoService
             $quantBase = $mp->pivot->Quantidade * $fator;
 
             if ($mp->composicoes->count()) {
+                $rendimentoComp = $mp->Rendimento ?: 1;
+
                 foreach ($mp->composicoes as $filha) {
-                    $total = $quantBase * $filha->pivot->Quantidade;
+                    $qtdOriginalFilha = $filha->pivot->Quantidade;
+
+                    $total = ($qtdOriginalFilha / $rendimentoComp) * $quantBase;
                     $materias[] = $this->criarEntradaMateria($filha, $total, $filha->pivot->Quantidade);
                 }
             } else {
