@@ -100,7 +100,7 @@ class ProdutoMateriaPrimaService
 
     private function normalizarNumero($valor): float
     {
-        if (is_null($valor)) {
+        if (is_null($valor) || $valor === '') {
             return 0.0;
         }
 
@@ -108,8 +108,16 @@ class ProdutoMateriaPrimaService
             return round((float) $valor, 2);
         }
 
-        $valor = str_replace('.', '', $valor);
-        $valor = str_replace(',', '.', $valor);
+        $valor = trim($valor);
+
+        if (str_contains($valor, ',') && str_contains($valor, '.')) {
+            $valor = str_replace('.', '', $valor);
+            $valor = str_replace(',', '.', $valor);
+        }
+
+        elseif (str_contains($valor, ',')) {
+            $valor = str_replace(',', '.', $valor);
+        }
 
         return round((float) $valor, 2);
     }
