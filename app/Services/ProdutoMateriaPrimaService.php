@@ -6,6 +6,8 @@ use App\Models\MateriaPrima;
 use App\Models\Produto;
 use App\Models\ProdutoMateriaPrima;
 use Illuminate\Support\Collection;
+use Illuminate\Support\Facades\DB;
+use Throwable;
 
 class ProdutoMateriaPrimaService
 {
@@ -53,27 +55,47 @@ class ProdutoMateriaPrimaService
         ));
     }
 
+    /**
+     * @throws Throwable
+     */
     public function salvar(Produto $produto, array $materias, float $custoTotal): void
     {
-        foreach ($materias as $m) {
-            $custoUnitario = $this->normalizarNumero($m['CustoUnitario']);
-            $custo = $this->normalizarNumero($m['Custo']);
+        DB::beginTransaction();
 
-            ProdutoMateriaPrima::query()->updateOrCreate(
-                [
-                    'ProdutoID'      => $produto->ProdutoID,
-                    'MateriaPrimaID' => $m['MateriaPrimaID'],
-                ],
-                [
-                    'Unidade'       => $m['Unidade'],
-                    'Quantidade'    => $m['Quantidade'],
-                    'CustoUnitario' => $custoUnitario,
-                    'Custo'         => $custo,
-                ]
-            );
+        try {
+            $idsAtuais = collect($materias)
+                ->pluck('MateriaPrimaID')
+                ->toArray();
+
+            ProdutoMateriaPrima::query()
+                ->where('ProdutoID', $produto->ProdutoID)
+                ->whereNotIn('MateriaPrimaID', $idsAtuais)
+                ->delete();
+
+            foreach ($materias as $m) {
+                $custoUnitario = $this->normalizarNumero($m['CustoUnitario']);
+                $custo = $this->normalizarNumero($m['Custo']);
+
+                ProdutoMateriaPrima::query()->updateOrCreate(
+                    [
+                        'ProdutoID' => $produto->ProdutoID,
+                        'MateriaPrimaID' => $m['MateriaPrimaID'],
+                    ],
+                    [
+                        'Unidade' => $m['Unidade'],
+                        'Quantidade' => $m['Quantidade'],
+                        'CustoUnitario' => $custoUnitario,
+                        'Custo' => $custo,
+                    ]
+                );
+            }
+
+            $produto->update(['CustoMedio' => $custoTotal]);
+            DB::commit();
+        } catch (Throwable $e) {
+            DB::rollBack();
+            throw $e;
         }
-
-        $produto->update(['CustoMedio' => $custoTotal]);
     }
 
     private function normalizarNumero($valor): float
