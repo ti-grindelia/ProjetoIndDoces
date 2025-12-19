@@ -56,6 +56,9 @@ class ProdutoMateriaPrimaService
     public function salvar(Produto $produto, array $materias, float $custoTotal): void
     {
         foreach ($materias as $m) {
+            $custoUnitario = $this->normalizarNumero($m['CustoUnitario']);
+            $custo = $this->normalizarNumero($m['Custo']);
+
             ProdutoMateriaPrima::query()->updateOrCreate(
                 [
                     'ProdutoID'      => $produto->ProdutoID,
@@ -64,13 +67,29 @@ class ProdutoMateriaPrimaService
                 [
                     'Unidade'       => $m['Unidade'],
                     'Quantidade'    => $m['Quantidade'],
-                    'CustoUnitario' => $m['CustoUnitario'],
-                    'Custo'         => $m['Custo'],
+                    'CustoUnitario' => $custoUnitario,
+                    'Custo'         => $custo,
                 ]
             );
         }
 
         $produto->update(['CustoMedio' => $custoTotal]);
+    }
+
+    private function normalizarNumero($valor): float
+    {
+        if (is_null($valor)) {
+            return 0.0;
+        }
+
+        if (is_int($valor) || is_float($valor)) {
+            return round((float) $valor, 2);
+        }
+
+        $valor = str_replace('.', '', $valor);
+        $valor = str_replace(',', '.', $valor);
+
+        return round((float) $valor, 2);
     }
 
     public function calcularTotais(array $lista, float $rendimento): array
