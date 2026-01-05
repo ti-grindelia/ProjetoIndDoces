@@ -90,7 +90,8 @@ class ProdutoMateriaPrimaService
                 );
             }
 
-            $produto->update(['CustoMedio' => $custoTotal]);
+            $custoMedio = $this->normalizarNumero($custoTotal / $produto->RendimentoProducao);
+            $produto->update(['CustoMedio' => $custoMedio]);
             DB::commit();
         } catch (Throwable $e) {
             DB::rollBack();

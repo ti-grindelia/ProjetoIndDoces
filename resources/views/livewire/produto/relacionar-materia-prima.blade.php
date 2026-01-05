@@ -104,7 +104,7 @@
 
             <x-slot:actions>
                 <x-button label="Cancelar" @click="$wire.modal = false"/>
-                <x-button wire:click="salvar" label="Salvar" form="salvar-materias-form" class="bg-blue-600 text-white"/>
+                <x-button wire:click="salvar" label="Salvar" form="salvar-materias-form" class="bg-blue-600 text-white" spinner="salvar"/>
             </x-slot:actions>
         </x-form>
     @endif
