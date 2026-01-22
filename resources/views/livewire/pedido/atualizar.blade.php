@@ -10,7 +10,7 @@
         </div>
         <div class="flex flex-row space-x-4 mb-2 w-full">
             <div class="w-1/2">
-                <x-datetime label="DataInclusao" wire:model="form.dataInclusao" readonly/>
+                <x-datetime label="Data Inclusão" wire:model="form.dataInclusao" readonly/>
             </div>
             <div class="flex-1">
                 <x-input label="Custo Total" wire:model="form.custoTotal" readonly/>

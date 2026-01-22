@@ -31,6 +31,8 @@ class Pedido extends Model
     protected $casts = [
         'DataInclusao' => 'datetime',
         'CustoTotal'   => 'decimal:2',
+        'AlteradoEm'   => 'datetime',
+        'CanceladoEm'  => 'datetime',
     ];
 
     public function empresa(): BelongsTo
@@ -41,6 +43,16 @@ class Pedido extends Model
     public function usuario(): BelongsTo
     {
         return $this->belongsTo(Usuario::class, 'UsuarioID');
+    }
+
+    public function usuarioAlteracao(): BelongsTo
+    {
+        return $this->belongsTo(Usuario::class, 'AlteradoPor', 'UsuarioID');
+    }
+
+    public function usuarioCancelamento(): BelongsTo
+    {
+        return $this->belongsTo(Usuario::class, 'CanceladoPor', 'UsuarioID');
     }
 
     public function itens(): HasMany

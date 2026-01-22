@@ -24,11 +24,11 @@ class AtualizarForm extends Form
 
     public ?string $alteradoEm = null;
 
-    public ?int $alteradoPor = null;
+    public ?string $alteradoPor = null;
 
     public ?string $canceladoEm = null;
 
-    public ?int $canceladoPor = null;
+    public ?string $canceladoPor = null;
 
     public array $itens = [];
 
@@ -49,10 +49,10 @@ class AtualizarForm extends Form
             $this->statusFormatado = $this->status;
         }
         $this->custoTotal   = $pedido->CustoTotal;
-        $this->alteradoEm   = $pedido->AlteradoEm;
-        $this->alteradoPor  = $pedido->AlteradoPor;
-        $this->canceladoEm  = $pedido->CanceladoEm;
-        $this->canceladoPor = $pedido->CanceladoPor;
+        $this->alteradoEm   = $pedido->AlteradoEm?->format('d/m/Y H:i') ?? null;
+        $this->alteradoPor  = $pedido->usuarioAlteracao?->Nome ?? null;
+        $this->canceladoEm  = $pedido->CanceladoEm?->format('d/m/Y H:i') ?? null;
+        $this->canceladoPor = $pedido->usuarioCancelamento?->Nome ?? null;
         $this->itens        = $pedido->itens->map(function ($item) {
             return [
                 'PedidoItemID' => $item->PedidoItemID,
