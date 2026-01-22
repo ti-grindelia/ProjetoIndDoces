@@ -30,12 +30,21 @@ class PedidoProcessamentoService
 
             $produto = $produtos[$codigo];
 
-            $this->processarMateriasTotais($produto, $quantidade);
+            $materiasProduto = $this->calcularMateriasProduto($produto, $quantidade);
+
+            foreach ($materiasProduto as $mp) {
+                $this->somarMateriaTotalObjeto($mp);
+            }
 
             $produtoProcessado = $this->montarProdutoProcessado($produto, $quantidade);
 
             $this->registrarProdutoPorIndustria($produtoProcessado, $produto->EmpresaID);
         }
+
+        foreach ($this->materiasTotais as &$mp) {
+            $mp['Total'] = round($mp['Total'], 3);
+        }
+        unset($mp);
 
         return [
             'produtosProcessados'      => $this->produtosProcessados,
@@ -90,27 +99,17 @@ class PedidoProcessamentoService
         return null;
     }
 
-    private function processarMateriasTotais($produto, float $quantidade): void
+    private function somarMateriaTotalObjeto(array $mp): void
     {
-        foreach ($produto->materiasPrimas as $mp) {
-            $quantBase = $mp->pivot->Quantidade * $quantidade;
+        $id = $mp['MateriaPrimaID'];
 
-            if ($mp->composicoes->count()) {
-
-                $rendimentoComp = $mp->Rendimento ?: 1;
-
-                foreach ($mp->composicoes as $filha) {
-                    $qtdOriginalFilha = $filha->pivot->Quantidade;
-
-                    $qtdFilha = ($qtdOriginalFilha / $rendimentoComp) * $quantBase;
-
-                    $this->somarMateriaTotal($filha, $qtdFilha);
-                }
-
-            } else {
-                $this->somarMateriaTotal($mp, $quantBase);
-            }
+        if (!isset($this->materiasTotais[$id])) {
+            $this->materiasTotais[$id] = $mp;
+            return;
         }
+
+        $this->materiasTotais[$id]['Total'] += $mp['Total'];
+        $this->materiasTotais[$id]['Total'] = round($this->materiasTotais[$id]['Total'], 3);
     }
 
     private function montarProdutoProcessado($produto, float $quantidade): array
@@ -136,48 +135,41 @@ class PedidoProcessamentoService
         }
     }
 
-    private function somarMateriaTotal($mp, float $quantidade): void
-    {
-        $id = $mp->MateriaPrimaID;
-
-        if (!isset($this->materiasTotais[$id])) {
-            $this->materiasTotais[$id] = [
-                'CodigoAlternativo' => $mp->CodigoAlternativo,
-                'MateriaPrimaID' => $id,
-                'Descricao' => $mp->Descricao,
-                'Unidade' => $mp->Unidade,
-                'Total' => 0,
-            ];
-        }
-
-        $this->materiasTotais[$id]['Total'] += $quantidade;
-        $this->materiasTotais[$id]['Total'] = round($this->materiasTotais[$id]['Total'], 3);
-    }
-
     private function calcularMateriasProduto($produto, float $quantidade): array
     {
         $rendimento = $produto->RendimentoProducao ?: 1;
         $fator = $quantidade / $rendimento;
+
         $materias = [];
 
         foreach ($produto->materiasPrimas as $mp) {
             $quantBase = $mp->pivot->Quantidade * $fator;
 
-            if ($mp->composicoes->count()) {
+            if ($mp->composicoes->isNotEmpty()) {
                 $rendimentoComp = $mp->Rendimento ?: 1;
 
                 foreach ($mp->composicoes as $filha) {
-                    $qtdOriginalFilha = $filha->pivot->Quantidade;
-
-                    $total = ($qtdOriginalFilha / $rendimentoComp) * $quantBase;
-                    $materias[] = $this->criarEntradaMateria($filha, $total, $filha->pivot->Quantidade);
+                    $total = ($filha->pivot->Quantidade / $rendimentoComp) * $quantBase;
+                    $this->somarMateriaProduto($materias, $filha, $total, $filha->pivot->Quantidade);
                 }
             } else {
-                $materias[] = $this->criarEntradaMateria($mp, $quantBase, $mp->pivot->Quantidade);
+                $this->somarMateriaProduto($materias, $mp, $quantBase, $mp->pivot->Quantidade);
             }
         }
 
-        return $materias;
+        return array_values($materias);
+    }
+
+    private function somarMateriaProduto(array &$materias, $mp, float $total, float $quantOriginal): void
+    {
+        $id = $mp->MateriaPrimaID;
+
+        if (!isset($materias[$id])) {
+            $materias[$id] = $this->criarEntradaMateria($mp, $total, $quantOriginal);
+            return;
+        }
+
+        $materias[$id]['Total'] += $total;
     }
 
     private function criarEntradaMateria($mp, float $total, float $quantBase): array
