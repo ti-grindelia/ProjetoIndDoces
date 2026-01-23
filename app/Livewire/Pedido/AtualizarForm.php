@@ -3,6 +3,7 @@
 namespace App\Livewire\Pedido;
 
 use App\Models\Pedido;
+use App\Services\PedidoListarMateriasService;
 
 class AtualizarForm extends Form
 {
@@ -53,39 +54,12 @@ class AtualizarForm extends Form
         $this->alteradoPor  = $pedido->usuarioAlteracao?->Nome ?? null;
         $this->canceladoEm  = $pedido->CanceladoEm?->format('d/m/Y H:i') ?? null;
         $this->canceladoPor = $pedido->usuarioCancelamento?->Nome ?? null;
-        $this->itens        = $pedido->itens->map(function ($item) {
-            return [
-                'PedidoItemID' => $item->PedidoItemID,
-                'Quantidade'   => $item->Quantidade,
-                'Produto'      => [
-                    'ProdutoID' => $item->produto->ProdutoID,
-                    'Descricao' => $item->produto->Descricao
-                ],
-                'MateriasPrimas' => $item->produto->materiasPrimas->map(function ($mp) {
-                    return [
-                        'MateriaPrimaID' => $mp->MateriaPrimaID,
-                        'Descricao'      => $mp->Descricao,
-                        'Quantidade'     => $mp->pivot->Quantidade,
-                        'Unidade'        => $mp->Unidade,
-                    ];
-                })->toArray()
-            ];
-        })->toArray();
 
-        $this->materiasPrimas = collect($this->itens)
-            ->pluck('MateriasPrimas')
-            ->flatten(1)
-            ->groupBy('MateriaPrimaID')
-            ->map(function ($grupo) {
-                return [
-                    'MateriaPrimaID' => $grupo->first()['MateriaPrimaID'],
-                    'Descricao'      => $grupo->first()['Descricao'],
-                    'Quantidade'     => $grupo->sum('Quantidade'),
-                    'Unidade'        => $grupo->first()['Unidade']
-                ];
-            })
-            ->values()
-            ->toArray();
+        $service = new PedidoListarMateriasService();
+        $resultado = $service->calcular($pedido);
+
+        $this->itens        = $resultado['itens'];
+        $this->materiasPrimas = $resultado['materiasPrimas'];
     }
 
     public function atualizarStatusParaProducao(): void

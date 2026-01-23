@@ -3,6 +3,7 @@
 namespace App\Livewire\Pedido;
 
 use App\Models\Pedido;
+use App\Services\PedidoListarMateriasService;
 use Illuminate\Contracts\View\View;
 use Livewire\Attributes\On;
 use Livewire\Component;
@@ -15,6 +16,8 @@ class Atualizar extends Component
     public AtualizarForm $form;
 
     public bool $modal = false;
+
+    public $service = PedidoListarMateriasService::class;
 
     public function render(): View
     {
