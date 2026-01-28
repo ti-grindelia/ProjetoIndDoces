@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\PedidoPdfController;
 use App\Livewire\Autenticacao\Login;
 use App\Livewire\Autenticacao\Registro;
 use App\Livewire\Usuario;
@@ -23,4 +24,5 @@ Route::middleware(['auth'])->group(function () {
 
     Route::get('/pedidos', Pedido\Index::class)->name('pedidos');
     Route::get('/novoPedido', Pedido\Criar::class)->name('novoPedido');
+    Route::get('/pedido/{pedido}/pdf', [PedidoPdfController::class, 'imprimir'])->name('pedido.pdf');
 });

@@ -74,6 +74,16 @@
                 />
             </div>
 
+            <div class="tooltip tooltip-left" data-tip="Imprimir Pedido">
+                <x-button
+                    id="imprimir-btn-{{ $pedido->PedidoID }}"
+                    wire:key="imprimir-btn-{{ $pedido->PedidoID }}"
+                    icon="o-printer"
+                    onclick="window.open('{{ route('pedido.pdf', $pedido->PedidoID) }}', '_blank')"
+                    spinner class="btn-sm btn-success"
+                />
+            </div>
+
             @unless($pedido->Status == 'Cancelado' || $pedido->Status == 'Finalizado' || $pedido->Status == 'Producao')
                 <div class="tooltip tooltip-left" data-tip="Cancelar Pedido">
                     <x-button
