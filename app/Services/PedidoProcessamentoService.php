@@ -29,16 +29,36 @@ class PedidoProcessamentoService
             if (!$quantidade) continue;
 
             $produto = $produtos[$codigo];
+            $normalizado = $this->normalizarProduto($produto, $quantidade);
+            $descricaoBase = $normalizado['descricao_base'];
+            $quantidadeFinal = $normalizado['quantidade'];
 
-            $materiasProduto = $this->calcularMateriasProduto($produto, $quantidade);
+            $produtoBase = $produtos->first(
+                fn($p) => strtoupper(trim($p->Descricao)) === strtoupper(trim($descricaoBase))
+            ) ?? $produto;
+
+            $materiasProduto = $this->calcularMateriasProduto($produtoBase, $quantidadeFinal);
 
             foreach ($materiasProduto as $mp) {
                 $this->somarMateriaTotalObjeto($mp);
             }
 
-            $produtoProcessado = $this->montarProdutoProcessado($produto, $quantidade);
+            $chave = $produtoBase->ProdutoID;
 
-            $this->registrarProdutoPorIndustria($produtoProcessado, $produto->EmpresaID);
+            if (isset($this->produtosProcessados[$chave])) {
+                $this->produtosProcessados[$chave]['Quantidade'] += $quantidadeFinal;
+            } else {
+                $this->produtosProcessados[$chave] =
+                    $this->montarProdutoProcessado($produtoBase, $quantidadeFinal);
+            }
+        }
+
+        foreach ($this->produtosProcessados as $produto) {
+            if ($produto['Industria'] == 1) {
+                $this->produtosIndustriaDoces[] = $produto;
+            } elseif ($produto['Industria'] == 2) {
+                $this->produtosIndustriaSalgados[] = $produto;
+            }
         }
 
         foreach ($this->materiasTotais as &$mp) {
@@ -47,10 +67,24 @@ class PedidoProcessamentoService
         unset($mp);
 
         return [
-            'produtosProcessados'      => $this->produtosProcessados,
+            'produtosProcessados'      => array_values($this->produtosProcessados),
             'produtosIndustriaDoces'  => $this->produtosIndustriaDoces,
             'produtosIndustriaSalgados' => $this->produtosIndustriaSalgados,
             'materiasTotais'          => $this->materiasTotais,
+        ];
+    }
+
+    private function normalizarProduto($produto, float $quantidade): array
+    {
+        $descricao = strtoupper(trim($produto['Descricao']));
+
+        if (str_contains($descricao, 'CENTO')) {
+            $descricao = trim(str_replace('CENTO', '', $descricao));
+        }
+
+        return [
+            'descricao_base' => $descricao,
+            'quantidade'     => $quantidade
         ];
     }
 
@@ -122,17 +156,6 @@ class PedidoProcessamentoService
             'Industria'  => $produto->EmpresaID,
             'MateriasPrimas' => $this->calcularMateriasProduto($produto, $quantidade),
         ];
-    }
-
-    private function registrarProdutoPorIndustria(array $produto, int $empresaId): void
-    {
-        $this->produtosProcessados[] = $produto;
-
-        if ($empresaId == 1) {
-            $this->produtosIndustriaDoces[] = $produto;
-        } elseif ($empresaId == 2) {
-            $this->produtosIndustriaSalgados[] = $produto;
-        }
     }
 
     private function calcularMateriasProduto($produto, float $quantidade): array
