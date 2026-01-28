@@ -58,17 +58,20 @@
                     @foreach($form->itens as $item)
                         <div class="mb-3 border-b border-gray-500 pb-2">
                             <div class="font-semibold text-sm flex flex-row justify-between">
-                                <div>{{ $item['Produto']['Descricao'] }}</div>
+                                <div>{{ $item['Produto']['CodigoAlternativo'] }} - {{ $item['Produto']['Descricao'] }}</div>
                                 <div>{{ $item['Quantidade'] }}</div>
                             </div>
 
                             <div class="mt-2 ml-4">
                                 @foreach($item['MateriasPrimas'] as $mp)
                                     <div class="text-xs ml-2 flex flex-row justify-between text-gray-500">
-                                        <div>• {{ $mp['Descricao'] }}</div>
+                                        <div>• {{ $mp['CodigoAlternativo'] }} - {{ $mp['Descricao'] }}</div>
                                         <div>{{ $mp['Quantidade'] }} <span class="text-xs">{{ $mp['Unidade'] }}</span></div>
                                     </div>
                                 @endforeach
+                                <div class="font-semibold text-sm flex flex-row justify-end mt-2">
+                                    Custo (R$): {{ number_format($item['CustoTotal'], 2, ',', '.') }}
+                                </div>
                             </div>
                         </div>
                     @endforeach
@@ -76,7 +79,7 @@
                 <div x-show="aba === 'materias-primas'" class="max-h-[500px] overflow-y-auto">
                     @forelse($form->materiasPrimas as $mp)
                         <div class="mb-3 border-b border-gray-400 pb-2 flex justify-between text-sm">
-                            <div>{{ $mp['Descricao'] }}</div>
+                            <div>{{ $mp['CodigoAlternativo'] }} - {{ $mp['Descricao'] }}</div>
                             <div>{{ $mp['Quantidade'] }} <span class="text-xs">{{ $mp['Unidade'] }}</span></div>
                         </div>
                     @empty

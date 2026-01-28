@@ -23,17 +23,21 @@ class PedidoListarMateriasService
     private function montarItensPedido(Pedido $pedido): array
     {
         return $pedido->itens->map(function ($item) {
+            $materias = $this->calcularMateriasProduto($item->produto, $item->Quantidade);
+
+            $custoProduto = collect($materias)->sum('CustoTotal');
+
             return [
                 'PedidoItemID' => $item->PedidoItemID,
                 'Quantidade'   => round($item->Quantidade, 2),
                 'Produto'      => [
                     'ProdutoID' => $item->produto->ProdutoID,
+                    'CodigoAlternativo'    => $item->produto->CodigoAlternativo,
                     'Descricao' => $item->produto->Descricao,
                 ],
-                'MateriasPrimas' => $this->calcularMateriasProduto(
-                    $item->produto,
-                    $item->Quantidade
-                ),
+                'MateriasPrimas' => $materias,
+                'CustoTotal'    => round($custoProduto, 2),
+                'CustoUnitario' => round($custoProduto / max($item->Quantidade, 1), 2)
             ];
         })->toArray();
     }
@@ -53,7 +57,6 @@ class PedidoListarMateriasService
 
                 foreach ($mp->composicoes as $filha) {
                     $total = ($filha->pivot->Quantidade / $rendimentoComp) * $quantBase;
-
                     $this->somarMateria($materias, $filha, $total);
                 }
             } else {
@@ -71,16 +74,21 @@ class PedidoListarMateriasService
     private function somarMateria(array &$materias, $mp, float $quantidade): void
     {
         $id = $mp->MateriaPrimaID;
+        $preco = (float) ($mp->PrecoCompra ?? 0);
 
         if (!isset($materias[$id])) {
             $materias[$id] = [
                 'MateriaPrimaID' => $id,
+                'CodigoAlternativo' => $mp->CodigoAlternativo,
                 'Descricao'      => $mp->Descricao,
                 'Quantidade'     => $quantidade,
                 'Unidade'        => $mp->Unidade,
+                'PrecoCompra'    => $preco,
+                'CustoTotal'     => $preco * $quantidade,
             ];
         } else {
             $materias[$id]['Quantidade'] += $quantidade;
+            $materias[$id]['CustoTotal'] += $preco * $quantidade;
         }
     }
 
