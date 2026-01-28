@@ -37,12 +37,6 @@ class PedidoProcessamentoService
                 fn($p) => strtoupper(trim($p->Descricao)) === strtoupper(trim($descricaoBase))
             ) ?? $produto;
 
-            $materiasProduto = $this->calcularMateriasProduto($produtoBase, $quantidadeFinal);
-
-            foreach ($materiasProduto as $mp) {
-                $this->somarMateriaTotalObjeto($mp);
-            }
-
             $chave = $produtoBase->ProdutoID;
 
             if (isset($this->produtosProcessados[$chave])) {
@@ -52,6 +46,18 @@ class PedidoProcessamentoService
                     $this->montarProdutoProcessado($produtoBase, $quantidadeFinal);
             }
         }
+
+        foreach ($this->produtosProcessados as &$produto) {
+            $produto['MateriasPrimas'] = $this->calcularMateriasProduto(
+                Produto::find($produto['ProdutoID']),
+                $produto['Quantidade']
+            );
+
+            foreach ($produto['MateriasPrimas'] as $mp) {
+                $this->somarMateriaTotalObjeto($mp);
+            }
+        }
+        unset($produto);
 
         foreach ($this->produtosProcessados as $produto) {
             if ($produto['Industria'] == 1) {
@@ -154,7 +160,7 @@ class PedidoProcessamentoService
             'Descricao'  => $produto->Descricao,
             'Quantidade' => $quantidade,
             'Industria'  => $produto->EmpresaID,
-            'MateriasPrimas' => $this->calcularMateriasProduto($produto, $quantidade),
+            'MateriasPrimas' => [],
         ];
     }
 
