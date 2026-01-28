@@ -110,7 +110,7 @@
                 </div>
 
                 <div x-show="aba === 'materias-primas'">
-                    <x-pedidos.materiais-tabela :materias="$materiasTotais"/>
+                    <x-pedidos.materias-tabela :materias="$materiasTotais"/>
                     <hr class="my-4 border-gray-300">
                      <div class="flex flex-row justify-between pt-2">
                         <x-button

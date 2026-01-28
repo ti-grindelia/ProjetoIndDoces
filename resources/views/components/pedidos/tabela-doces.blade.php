@@ -30,7 +30,7 @@
                             </td>
 
                             <td class="py-1 text-left">
-                                {{ number_format($mp['Total'], 3, '.', '.') }}
+                                {{ number_format($mp['Quantidade'], 3) }}
                                 &nbsp;
                                 {{ $mp['Unidade'] }}
                             </td>

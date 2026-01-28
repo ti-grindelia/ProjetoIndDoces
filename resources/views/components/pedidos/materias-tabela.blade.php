@@ -17,7 +17,7 @@
                 <tr class="text-base font-semibold text-md">
                     <td class="py-2">{{ $m['CodigoAlternativo'] }}</td>
                     <td class="py-2">{{ $m['Descricao'] ?? '' }}</td>
-                    <td class="py-2 text-right">{{ $m['Total'] ?? '' }}</td>
+                    <td class="py-2 text-right">{{ $m['Quantidade'] ?? '' }}</td>
                     <td class="py-2 text-right text-sm font-normal">{{ $m['Unidade'] ?? '' }}</td>
                 </tr>
 

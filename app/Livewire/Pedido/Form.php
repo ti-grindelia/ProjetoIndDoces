@@ -104,7 +104,7 @@ class Form extends BaseForm
                 $materias[] = [
                     'PedidoID' => $pedidoID,
                     'MateriaPrimaID' => $mp['MateriaPrimaID'],
-                    'Quantidade' => $mp['Total'],
+                    'Quantidade' => $mp['Quantidade'],
                     'CustoTotal' => $mp['CustoTotal']
                 ];
             }
