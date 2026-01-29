@@ -35,7 +35,14 @@ class Produto extends Model
         'UltimaSincronizacao',
         'PesoUnidade',
         'RendimentoProducao',
-        'Ativo'
+        'Ativo',
+        'CustoMateriaPrima',
+        'CustoIndustrializacao',
+        'CustoTotal',
+        'MVAPercentual',
+        'ValorMVA',
+        'ICMSPercentual',
+        'ValorICMS',
     ];
 
     protected $casts = [

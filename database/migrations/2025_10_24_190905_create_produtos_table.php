@@ -27,6 +27,13 @@ return new class extends Migration
             $table->decimal('PesoUnidade', 10, 4)->nullable();
             $table->decimal('RendimentoProducao', 10, 4)->nullable();
             $table->boolean('Ativo')->default(true);
+            $table->decimal('CustoMateriaPrima', 10, 2)->nullable();
+            $table->decimal('CustoIndustrializacao', 10, 2)->nullable();
+            $table->decimal('CustoTotal', 10, 2)->nullable();
+            $table->decimal('MVAPercentual', 10, 2)->nullable();
+            $table->decimal('ValorMVA', 10, 2)->nullable();
+            $table->decimal('ICMSPercentual', 10, 2)->nullable();
+            $table->decimal('ValorICMS', 10, 2)->nullable();
         });
     }
 

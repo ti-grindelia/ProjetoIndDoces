@@ -40,6 +40,31 @@
         <x-select class="mb-2" icon="o-home-modern" :options="$this->empresas" wire:model="form.empresa"
             label="Empresa" placeholder="Selecione a empresa"/>
 
+        <x-hr />
+
+        <div class="flex flex-row space-x-4 mb-2 w-full">
+            <div class="w-1/3">
+                <x-input label="Custo Matéria-Prima" wire:model.blur="form.custoMateriaPrima"/>
+            </div>
+
+            <div class="1/3">
+                <x-input label="Custo Industrialização" wire:model.blur="form.custoIndustrializacao"/>
+            </div>
+
+            <div class="1/3">
+                <x-input label="Custo Total" wire:model="form.custoTotal" readonly/>
+            </div>
+        </div>
+
+        <div class="flex flex-row space-x-4 mb-2 w-full">
+            <div class="w-1/2">
+                <x-input label="MVA Percentual (%)" wire:model="form.mvaPercentual"/>
+            </div>
+            <div class="flex-1">
+                <x-input label="Alíquota ICMS ST (%)" wire:model="form.icmsPercentual"/>
+            </div>
+        </div>
+
         <x-checkbox label="Fracionado" wire:model="form.fracionado" class="checkbox-info" tight disabled/>
         <x-checkbox label="Ativo" wire:model="form.ativo" class="checkbox-info" tight disabled/>
 
