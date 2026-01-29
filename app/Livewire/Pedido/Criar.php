@@ -6,7 +6,6 @@ use App\Models\Pedido;
 use App\Services\PedidoProcessamentoService;
 use Illuminate\Contracts\View\View;
 use Illuminate\Support\Carbon;
-use Livewire\Attributes\On;
 use Livewire\Component;
 use Livewire\WithFileUploads;
 use Mary\Traits\Toast;

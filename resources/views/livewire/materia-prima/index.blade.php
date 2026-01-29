@@ -23,7 +23,9 @@
             />
         </div>
 
-        <x-button @click="$dispatch('materia-prima::criar')" label="Nova matéria-prima" icon="o-plus" class="bg-blue-600 text-white"/>
+        <x-button @click="$dispatch('materia-prima::criar')" label="Nova matéria-prima" icon="o-plus" class="bg-blue-600 text-white mr-4"/>
+
+        <x-button @click="$dispatch('materia-prima::atualizarValores')" label="Atualizar valores" icon="o-arrow-path" class="btn-warning text-white"/>
     </div>
 
     <x-table :headers="$this->cabecalhos" :rows="$this->itens">
@@ -101,4 +103,5 @@
     <livewire:materia-prima.relacionar-composicao/>
     <livewire:materia-prima.arquivar/>
     <livewire:materia-prima.restaurar/>
+    <livewire:materia-prima.atualizar-valores-excel/>
 </div>
