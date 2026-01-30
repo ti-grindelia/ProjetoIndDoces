@@ -54,7 +54,7 @@
                 wire:key="editar-btn-{{ $empresa->EmpresaID }}"
                 icon="o-pencil"
                 @click="$dispatch('empresa::atualizar', { id: {{ $empresa->EmpresaID }} })"
-                spinner class="btn-sm btn-primary"
+                spinner class="btn-sm btn-primary btn-soft"
             />
 
             @unless($empresa->Ativo == false)
@@ -63,7 +63,7 @@
                     wire:key="arquivar-btn-{{ $empresa->EmpresaID }}"
                     icon="o-trash"
                     @click="$dispatch('empresa::arquivar', { id: {{ $empresa->EmpresaID }} })"
-                    spinner class="btn-sm btn-error"
+                    spinner class="btn-sm btn-error btn-soft"
                 />
             @else
                 <x-button
@@ -71,7 +71,7 @@
                     wire:key="restaurar-btn-{{ $empresa->EmpresaID }}"
                     icon="o-arrow-uturn-left"
                     @click="$dispatch('empresa::restaurar', { id: {{ $empresa->EmpresaID }} })"
-                    spinner class="btn-sm btn-warning"
+                    spinner class="btn-sm btn-warning btn-soft"
                 />
             @endunless
         </div>

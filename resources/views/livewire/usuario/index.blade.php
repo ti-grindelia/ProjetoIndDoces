@@ -50,7 +50,7 @@
                 wire:key="editar-btn-{{ $usuario->UsuarioID }}"
                 icon="o-pencil"
                 @click="$dispatch('usuario::atualizar', { id: {{ $usuario->UsuarioID }} })"
-                spinner class="btn-sm btn-primary"
+                spinner class="btn-sm btn-primary btn-soft"
             />
 
             @unless($usuario->Ativo == false)
@@ -59,7 +59,7 @@
                     wire:key="arquivar-btn-{{ $usuario->UsuarioID }}"
                     icon="o-trash"
                     @click="$dispatch('usuario::arquivar', { id: {{ $usuario->UsuarioID }} })"
-                    spinner class="btn-sm btn-error"
+                    spinner class="btn-sm btn-error btn-soft"
                 />
             @else
                 <x-button
@@ -67,7 +67,7 @@
                     wire:key="restaurar-btn-{{ $usuario->UsuarioID }}"
                     icon="o-arrow-uturn-left"
                     @click="$dispatch('usuario::restaurar', { id: {{ $usuario->UsuarioID }} })"
-                    spinner class="btn-sm btn-warning"
+                    spinner class="btn-sm btn-warning btn-soft"
                 />
             @endunless
         </div>

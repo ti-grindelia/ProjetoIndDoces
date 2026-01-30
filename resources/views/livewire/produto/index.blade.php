@@ -53,7 +53,7 @@
                     wire:key="editar-btn-{{ $produto->ProdutoID }}"
                     icon="o-pencil"
                     @click="$dispatch('produto::atualizar', { id: {{ $produto->ProdutoID }} })"
-                    spinner class="btn-sm btn-primary"
+                    spinner class="btn-sm btn-primary btn-soft"
                 />
             </div>
 
@@ -63,7 +63,7 @@
                     wire:key="materia-btn-{{ $produto->ProdutoID }}"
                     icon="o-eye-dropper"
                     @click="$dispatch('produto::relacionar-materia', { id: {{ $produto->ProdutoID }} })"
-                    spinner class="btn-sm btn-secondary"
+                    spinner class="btn-sm btn-secondary btn-soft"
                 />
             </div>
 

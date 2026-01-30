@@ -55,7 +55,7 @@
                     wire:key="editar-btn-{{ $materiaPrima->MateriaPrimaID }}"
                     icon="o-pencil"
                     @click="$dispatch('materia-prima::atualizar', { id: {{ $materiaPrima->MateriaPrimaID }} })"
-                    spinner class="btn-sm btn-primary"
+                    spinner class="btn-sm btn-primary btn-soft"
                 />
             </div>
 
@@ -66,7 +66,7 @@
                         wire:key="composicao-btn-{{ $materiaPrima->MateriaPrimaID }}"
                         icon="o-bars-3-center-left"
                         @click="$dispatch('materia::relacionar-composicao', { id: {{ $materiaPrima->MateriaPrimaID }} })"
-                        spinner class="btn-sm btn-secondary"
+                        spinner class="btn-sm btn-secondary btn-soft"
                     />
                 </div>
             @endif
@@ -78,7 +78,7 @@
                         wire:key="arquivar-btn-{{ $materiaPrima->MateriaPrimaID }}"
                         icon="o-trash"
                         @click="$dispatch('materia-prima::arquivar', { id: {{ $materiaPrima->MateriaPrimaID }} })"
-                        spinner class="btn-sm btn-error"
+                        spinner class="btn-sm btn-error btn-soft"
                     />
                 </div>
             @else
@@ -88,7 +88,7 @@
                         wire:key="restaurar-btn-{{ $materiaPrima->MateriaPrimaID }}"
                         icon="o-arrow-uturn-left"
                         @click="$dispatch('materia-prima::restaurar', { id: {{ $materiaPrima->MateriaPrimaID }} })"
-                        spinner class="btn-sm btn-warning"
+                        spinner class="btn-sm btn-warning btn-soft"
                     />
                 </div>
             @endunless
