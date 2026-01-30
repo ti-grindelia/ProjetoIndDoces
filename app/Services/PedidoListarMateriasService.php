@@ -23,17 +23,37 @@ class PedidoListarMateriasService
     private function montarItensPedido(Pedido $pedido): array
     {
         return $pedido->itens->map(function ($item) {
-            $materias = $this->calcularMateriasProduto($item->produto, $item->Quantidade);
+            $quantidade = (float) $item->Quantidade;
+            $produto = $item->produto;
+
+            $custoMateriaPrima = $produto->CustoMateriaPrima ?? 0;
+            $custoIndustrializacao = $produto->CustoIndustrializacao ?? 0;
+            $custoTotalUnitario = $custoMateriaPrima + $custoIndustrializacao;
+
+            $mvaPercentual = ((float) ($produto->MVAPercentual ?? 0)) / 100;
+            $icmsPercentual = ((float) ($produto->ICMSPercentual ?? 0)) / 100;
+
+            $valorMva = round($quantidade * $custoTotalUnitario * $mvaPercentual, 2);
+            $valorIcms = round($valorMva * $icmsPercentual, 2);
+
+            $materias = $this->calcularMateriasProduto($produto, $quantidade);
 
             $custoProduto = collect($materias)->sum('CustoTotal');
 
             return [
                 'PedidoItemID' => $item->PedidoItemID,
-                'Quantidade'   => round($item->Quantidade, 2),
+                'Quantidade'   => round($quantidade, 2),
                 'Produto'      => [
-                    'ProdutoID' => $item->produto->ProdutoID,
-                    'CodigoAlternativo'    => $item->produto->CodigoAlternativo,
-                    'Descricao' => $item->produto->Descricao,
+                    'ProdutoID' => $produto->ProdutoID,
+                    'CodigoAlternativo' => $produto->CodigoAlternativo,
+                    'Descricao' => $produto->Descricao,
+                    'CustoMateriaPrima' => $custoMateriaPrima,
+                    'CustoIndustrializacao' => $custoIndustrializacao,
+                    'CustoTotal' => $custoTotalUnitario,
+                    'MVAPercentual' => $produto->MVAPercentual ?? 0,
+                    'ICMSPercentual' => $produto->ICMSPercentual ?? 0,
+                    'ValorMVA'  => $valorMva,
+                    'ValorICMS' => $valorIcms,
                 ],
                 'MateriasPrimas' => $materias,
                 'CustoTotal'    => round($custoProduto, 2),

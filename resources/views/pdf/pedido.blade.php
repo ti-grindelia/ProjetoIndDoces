@@ -47,11 +47,6 @@
             font-weight: bold;
         }
 
-        .produto {
-            margin-bottom: 22px;
-            page-break-inside: avoid;
-        }
-
         table {
             width: 100%;
             border-collapse: collapse;
@@ -75,10 +70,46 @@
         .text-right {
             text-align: right;
         }
+
+        .linha-produto {
+            background: #f3f4f6;
+            font-weight: bold;
+            font-size: 10px;
+            page-break-inside: avoid;
+        }
+
+        .linha-produto td {
+            border-bottom: 1px dashed #cbd5f5;
+        }
+
+        .linha-materia td {
+            border: none !important;
+            font-size: 8px;
+            color: #555;
+            padding-top: 2px;
+            padding-bottom: 2px;
+        }
+
+        .linha-materia td:first-child {
+            padding-left: 20px;
+        }
+
+        .total-produto td {
+            background: #fafafa;
+            font-weight: bold;
+            font-size: 9px;
+            border-top: 1px dashed #cbd5f5;
+        }
+
+        .separador td {
+            border: none;
+            height: 6px;
+        }
     </style>
 </head>
 
 <body>
+    {{-- HEADER --}}
     <div class="header">
         <table class="header-table">
             <tr>
@@ -109,30 +140,83 @@
         </table>
     </div>
 
+    {{-- TABELA PRODUTOS --}}
     <table>
         <thead>
             <tr>
                 <th>#</th>
-                <th>Matéria-prima</th>
-                <th class="text-right">Quantidade</th>
-                <th>Un</th>
+                <th>Produto / Matéria-prima</th>
+                <th class="text-right">Qtde</th>
+                <th class="text-right">C. MP</th>
+                <th class="text-right">C. Ind</th>
+                <th class="text-right">C. Tot</th>
+                <th class="text-right">MVA%</th>
+                <th class="text-right">V. MVA</th>
+                <th class="text-right">ICMS%</th>
+                <th class="text-right">V. ICMS</th>
             </tr>
         </thead>
-        <tbody>
-            @php $totalGeral = 0; @endphp
 
-            @foreach($materiasPrimas as $mp)
-                @php $totalGeral += $mp['CustoTotal']; @endphp
-                <tr>
-                    <td>{{ $mp['CodigoAlternativo'] }}</td>
-                    <td>{{ $mp['Descricao'] }}</td>
+        <tbody>
+            @foreach($produtos as $item)
+
+                {{-- PRODUTO --}}
+                <tr class="linha-produto">
+                    <td>{{ $item['Produto']['CodigoAlternativo'] }}</td>
+                    <td>{{ $item['Produto']['Descricao'] }}</td>
                     <td class="text-right">
-                        {{ number_format($mp['Quantidade'], 3) }}
+                        {{ number_format($item['Quantidade'], 2, ',', '.') }}
                     </td>
-                    <td>{{ $mp['Unidade'] }}</td>
+                    <td class="text-right">
+                        {{ number_format($item['Produto']['CustoMateriaPrima'], 2, ',', '.') }}
+                    </td>
+                    <td class="text-right">
+                        {{ number_format($item['Produto']['CustoIndustrializacao'], 2, ',', '.') }}
+                    </td>
+                    <td class="text-right">
+                        {{ number_format($item['Produto']['CustoTotal'], 2, ',', '.') }}
+                    </td>
+                    <td class="text-right">
+                        {{ $item['Produto']['MVAPercentual'] }}%
+                    </td>
+                    <td class="text-right">
+                        {{ number_format($item['Produto']['ValorMVA'], 2, ',', '.') }}
+                    </td>
+                    <td class="text-right">
+                        {{ $item['Produto']['ICMSPercentual'] }}%
+                    </td>
+                    <td class="text-right">
+                        {{ number_format($item['Produto']['ValorICMS'], 2, ',', '.') }}
+                    </td>
                 </tr>
+
+                {{-- MATÉRIAS-PRIMAS --}}
+                @foreach($item['MateriasPrimas'] as $mp)
+                    <tr class="linha-materia">
+                        <td>↳ {{ $mp['CodigoAlternativo'] }}</td>
+                        <td>{{ $mp['Descricao'] }}</td>
+                        <td class="text-right">
+                            {{ number_format($mp['Quantidade'], 3, ',', '.') }} {{ $mp['Unidade'] }}
+                        </td>
+                        <td colspan="7"></td>
+                    </tr>
+                @endforeach
+
+                {{-- TOTAL DO PRODUTO --}}
+                <tr class="total-produto">
+                    <td colspan="10" class="text-right">
+                        Custo Total de Matéria-Prima do Produto:
+                        R$ {{ number_format($item['CustoTotal'], 2, ',', '.') }}
+                    </td>
+                </tr>
+
+                <tr class="separador">
+                    <td colspan="10"></td>
+                </tr>
+
             @endforeach
         </tbody>
     </table>
+
 </body>
 </html>

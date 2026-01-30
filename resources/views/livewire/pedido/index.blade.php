@@ -70,17 +70,27 @@
                     wire:key="visualizar-btn-{{ $pedido->PedidoID }}"
                     icon="o-eye"
                     @click="$dispatch('pedido::visualizar', { id: {{ $pedido->PedidoID }} })"
-                    spinner class="btn-sm btn-primary"
+                    spinner class="btn-sm btn-primary btn-soft"
+                />
+            </div>
+
+            <div class="tooltip tooltip-left" data-tip="Imprimir Matérias-Primas">
+                <x-button
+                    id="imprimir-btn-{{ $pedido->PedidoID }}"
+                    wire:key="imprimir-btn-{{ $pedido->PedidoID }}"
+                    icon="o-eye-dropper"
+                    onclick="window.open('{{ route('materia.pdf', $pedido->PedidoID) }}', '_blank')"
+                    spinner class="btn-sm btn-warning btn-soft"
                 />
             </div>
 
             <div class="tooltip tooltip-left" data-tip="Imprimir Pedido">
                 <x-button
-                    id="imprimir-btn-{{ $pedido->PedidoID }}"
-                    wire:key="imprimir-btn-{{ $pedido->PedidoID }}"
+                    id="imprimir-pedido-btn-{{ $pedido->PedidoID }}"
+                    wire:key="imprimir-pedido-btn-{{ $pedido->PedidoID }}"
                     icon="o-printer"
                     onclick="window.open('{{ route('pedido.pdf', $pedido->PedidoID) }}', '_blank')"
-                    spinner class="btn-sm btn-success"
+                    spinner class="btn-sm btn-success btn-soft"
                 />
             </div>
 
@@ -91,7 +101,7 @@
                         wire:key="cancelar-btn-{{ $pedido->PedidoID }}"
                         icon="o-x-circle"
                         @click="$dispatch('pedido::cancelar', { id: {{ $pedido->PedidoID }} })"
-                        spinner class="btn-sm btn-error"
+                        spinner class="btn-sm btn-error btn-soft"
                     />
                 </div>
             @endunless
