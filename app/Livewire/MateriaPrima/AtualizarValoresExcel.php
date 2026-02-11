@@ -4,7 +4,6 @@ namespace App\Livewire\MateriaPrima;
 
 use App\Jobs\ProcessarMateriasPrimasExcelJob;
 use Illuminate\Contracts\View\View;
-use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Storage;
 use Livewire\Attributes\On;
 use Livewire\Component;

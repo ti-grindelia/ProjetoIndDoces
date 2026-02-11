@@ -22,6 +22,8 @@
                 right tight
             />
         </div>
+
+        <x-button @click="$dispatch('produto::atualizarIndustrializacao')" label="Atualizar valor industrialização" icon="o-arrow-path" class="btn-warning text-white"/>
     </div>
 
     <x-table :headers="$this->cabecalhos" :rows="$this->itens">
@@ -92,6 +94,7 @@
 
     <livewire:produto.atualizar/>
     <livewire:produto.relacionar-materia-prima/>
+    <livewire:produto.atualizar-valor-industrializacao/>
 {{--    <livewire:produto.arquivar/>--}}
 {{--    <livewire:produto.restaurar/>--}}
 </div>
