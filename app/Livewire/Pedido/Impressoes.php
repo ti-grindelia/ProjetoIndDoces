@@ -19,6 +19,7 @@ class Impressoes extends Component
         return view('livewire.pedido.impressoes');
     }
 
+    #[On('pedido::impressoes')]
     public function abrir(int $id): void
     {
         $this->pedidoID = $id;
