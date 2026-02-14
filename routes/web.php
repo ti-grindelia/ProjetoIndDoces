@@ -24,6 +24,9 @@ Route::middleware(['auth'])->group(function () {
 
     Route::get('/pedidos', Pedido\Index::class)->name('pedidos');
     Route::get('/novoPedido', Pedido\Criar::class)->name('novoPedido');
+
     Route::get('/materia/{pedido}/pdf', [PedidoPdfController::class, 'imprimirMateria'])->name('materia.pdf');
-    Route::get('/pedido/{pedido}/pdf', [PedidoPdfController::class, 'imprimirPedido'])->name('pedido.pdf');
+    Route::get('/pedidoReceita/{pedido}/pdf', [PedidoPdfController::class, 'imprimirPedidoReceita'])->name('pedidoReceita.pdf');
+    Route::get('/pedidoSemReceita/{pedido}/pdf', [PedidoPdfController::class, 'imprimirPedidoSemReceita'])->name('pedidoSemReceita.pdf');
+    Route::get('/pedidoSimples/{pedido}/pdf', [PedidoPdfController::class, 'imprimirPedidoSimples'])->name('pedidoSimples.pdf');
 });

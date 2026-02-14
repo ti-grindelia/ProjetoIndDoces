@@ -74,23 +74,13 @@
                 />
             </div>
 
-            <div class="tooltip tooltip-left" data-tip="Imprimir Matérias-Primas">
+            <div class="tooltip tooltip-left" data-tip="Impressões Pedido">
                 <x-button
-                    id="imprimir-btn-{{ $pedido->PedidoID }}"
-                    wire:key="imprimir-btn-{{ $pedido->PedidoID }}"
-                    icon="o-eye-dropper"
-                    onclick="window.open('{{ route('materia.pdf', $pedido->PedidoID) }}', '_blank')"
-                    spinner class="btn-sm btn-warning btn-soft"
-                />
-            </div>
-
-            <div class="tooltip tooltip-left" data-tip="Imprimir Pedido">
-                <x-button
-                    id="imprimir-pedido-btn-{{ $pedido->PedidoID }}"
-                    wire:key="imprimir-pedido-btn-{{ $pedido->PedidoID }}"
+                    id="impressoes-btn-{{ $pedido->PedidoID }}"
+                    wire:key="impressoes-btn-{{ $pedido->PedidoID }}"
                     icon="o-printer"
-                    onclick="window.open('{{ route('pedido.pdf', $pedido->PedidoID) }}', '_blank')"
-                    spinner class="btn-sm btn-success btn-soft"
+                    @click="$dispatch('pedido::impressoes', { id: {{ $pedido->PedidoID }} })"
+                    spinner class="btn-sm btn-secondary btn-soft"
                 />
             </div>
 
@@ -113,4 +103,5 @@
 
     <livewire:pedido.atualizar/>
     <livewire:pedido.cancelar/>
+    <livewire:pedido.impressoes/>
 </div>

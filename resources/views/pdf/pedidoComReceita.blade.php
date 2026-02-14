@@ -71,6 +71,10 @@
             text-align: right;
         }
 
+        .text-center {
+            text-align: center;
+        }
+
         .linha-produto {
             background: #f3f4f6;
             font-weight: bold;
@@ -145,21 +149,21 @@
         <thead>
             <tr>
                 <th>#</th>
-                <th>Produto / Matéria-prima</th>
+                <th>Produto</th>
                 <th class="text-right">Qtde</th>
-                <th class="text-right">C. MP</th>
-                <th class="text-right">C. Ind</th>
-                <th class="text-right">C. Tot</th>
+                <th class="text-right">C.MP</th>
+                <th class="text-right">C.Ind</th>
+                <th class="text-right">C.Tot</th>
                 <th class="text-right">MVA%</th>
-                <th class="text-right">V. MVA</th>
+                <th class="text-right">V.MVA</th>
                 <th class="text-right">ICMS%</th>
-                <th class="text-right">V. ICMS</th>
+                <th class="text-right">V.ICMS</th>
+                <th class="text-right">Custo</th>
             </tr>
         </thead>
 
         <tbody>
             @foreach($produtos as $item)
-
                 {{-- PRODUTO --}}
                 <tr class="linha-produto">
                     <td>{{ $item['Produto']['CodigoAlternativo'] }}</td>
@@ -188,33 +192,61 @@
                     <td class="text-right">
                         {{ number_format($item['Produto']['ValorICMS'], 2, ',', '.') }}
                     </td>
+                    <td class="text-right">
+                        {{ number_format($item['CustoTotal'], 2, ',', '.') }}
+                    </td>
                 </tr>
 
                 {{-- MATÉRIAS-PRIMAS --}}
                 @foreach($item['MateriasPrimas'] as $mp)
                     <tr class="linha-materia">
-                        <td>↳ {{ $mp['CodigoAlternativo'] }}</td>
+                        <td>{{ $mp['CodigoAlternativo'] }}</td>
                         <td>{{ $mp['Descricao'] }}</td>
                         <td class="text-right">
                             {{ number_format($mp['Quantidade'], 3, ',', '.') }} {{ $mp['Unidade'] }}
                         </td>
-                        <td colspan="7"></td>
+                        <td colspan="8"></td>
                     </tr>
                 @endforeach
 
-                {{-- TOTAL DO PRODUTO --}}
-                <tr class="total-produto">
-                    <td colspan="10" class="text-right">
-                        Custo Total de Matéria-Prima do Produto:
-                        R$ {{ number_format($item['CustoTotal'], 2, ',', '.') }}
-                    </td>
-                </tr>
-
                 <tr class="separador">
-                    <td colspan="10"></td>
+                    <td colspan="11"></td>
                 </tr>
 
             @endforeach
+
+            <tr class="total-produto">
+                <td colspan="2" class="text-center">
+                    TOTAL
+                </td>
+                <td class="text-right">
+                    {{ number_format($totais['qtde'], 2, ',', '.') }}
+                </td>
+                <td class="text-right">
+                    {{ number_format($totais['custoMP'], 2, ',', '.') }}
+                </td>
+                <td class="text-right">
+                    {{ number_format($totais['custoInd'], 2, ',', '.') }}
+                </td>
+                <td class="text-right">
+                    {{ number_format($totais['custoTotal'], 2, ',', '.') }}
+                </td>
+                <td class="text-center">
+                    -
+                </td>
+                <td class="text-right">
+                    {{ number_format($totais['valorMva'], 2, ',', '.') }}
+                </td>
+                <td class="text-center">
+                    -
+                </td>
+                <td class="text-right">
+                    {{ number_format($totais['valorIcms'], 2, ',', '.') }}
+                </td>
+                <td class="text-right">
+                    {{ number_format($totais['custo'], 2, ',', '.') }}
+                </td>
+            </tr>
         </tbody>
     </table>
 
