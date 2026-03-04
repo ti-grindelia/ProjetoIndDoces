@@ -47,6 +47,14 @@
         <x-tabela.th :$headers nome="custoMedio"/>
         @endscope
 
+        @scope('header_ValorMVA', $headers)
+        <x-tabela.th :$headers nome="ValorMVA"/>
+        @endscope
+
+        @scope('header_CustoTotal', $headers)
+        <x-tabela.th :$headers nome="CustoTotal"/>
+        @endscope
+
         @scope('actions', $produto)
         <div class="flex items-center space-x-2">
             <div class="tooltip tooltip-left" data-tip="Editar Produto">

@@ -41,6 +41,14 @@ class Form extends BaseForm
 
     public float $icmsPercentual = 0.00;
 
+    public float $valorMVA = 0.00;
+
+    public int $quantidade = 1;
+
+    public float $baseST = 0.00;
+
+    public float $valorICMS = 0.00;
+
     public function rules(): array
     {
         return [
@@ -83,6 +91,8 @@ class Form extends BaseForm
         $this->custoTotal         = $produto->CustoTotal ?? 0.00;
         $this->mvaPercentual      = $produto->MVAPercentual ?? 0.00;
         $this->icmsPercentual     = $produto->ICMSPercentual ?? 0.00;
+        $this->valorMVA           = $produto->ValorMVA ?? 0.00;
+        $this->valorICMS          = $produto->ValorICMS ?? 0.00;
     }
 
     public function updated($property): void
@@ -90,8 +100,13 @@ class Form extends BaseForm
         if (in_array($property, [
             'custoMateriaPrima',
             'custoIndustrializacao',
+            'mvaPercentual',
+            'icmsPercentual',
+            'quantidade'
         ])) {
             $this->recalcularCustoTotal();
+            $this->recalcularMVA();
+            $this->recalcularImpostos();
         }
     }
 
@@ -103,9 +118,26 @@ class Form extends BaseForm
         );
     }
 
+    private function recalcularMVA(): void
+    {
+        $base = $this->quantidade * $this->custoTotal;
+        $this->valorMVA = round($base * ($this->mvaPercentual / 100), 2);
+    }
+
+    private function recalcularImpostos(): void
+    {
+        $base = $this->quantidade * $this->custoTotal;
+        $this->baseST = round($base + $this->valorMVA, 2);
+        $this->valorICMS = round($this->baseST * ($this->icmsPercentual / 100), 2);
+    }
+
     public function atualizar(): void
     {
         $this->validate();
+
+        $this->recalcularCustoTotal();
+        $this->recalcularMVA();
+        $this->recalcularImpostos();
 
         $this->produto->EmpresaID          = $this->empresa;
         $this->produto->CustoMedio         = $this->custoMedio;
@@ -116,6 +148,8 @@ class Form extends BaseForm
         $this->produto->CustoTotal         = $this->custoTotal;
         $this->produto->MVAPercentual      = $this->mvaPercentual;
         $this->produto->ICMSPercentual     = $this->icmsPercentual;
+        $this->produto->ValorMVA           = $this->valorMVA;
+        $this->produto->ValorICMS          = $this->valorICMS;
 
         $this->produto->update();
     }
