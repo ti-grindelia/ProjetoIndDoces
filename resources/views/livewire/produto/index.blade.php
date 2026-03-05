@@ -47,12 +47,12 @@
         <x-tabela.th :$headers nome="custoMedio"/>
         @endscope
 
-        @scope('header_ValorMVA', $headers)
-        <x-tabela.th :$headers nome="ValorMVA"/>
-        @endscope
-
         @scope('header_CustoTotal', $headers)
         <x-tabela.th :$headers nome="CustoTotal"/>
+        @endscope
+
+        @scope('header_ValorMVA', $headers)
+        <x-tabela.th :$headers nome="ValorMVA"/>
         @endscope
 
         @scope('actions', $produto)
