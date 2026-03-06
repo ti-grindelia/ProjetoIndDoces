@@ -123,7 +123,7 @@
                 <th>Produto</th>
                 <th class="text-right">Qtde</th>
                 <th class="text-right">C.Ind</th>
-            </tr>
+                <th class="text-right">C. Total Ind.</th></tr>
         </thead>
 
         <tbody>
@@ -137,6 +137,9 @@
                     </td>
                     <td class="text-right">
                         {{ number_format($item['Produto']['CustoIndustrializacao'], 2, ',', '.') }}
+                    </td>
+                    <td class="text-right">
+                        {{ number_format($item['Produto']['CustoIndustrializacao'] * $item['Quantidade'], 2, ',', '.') }}
                     </td>
                 </tr>
             @endforeach
