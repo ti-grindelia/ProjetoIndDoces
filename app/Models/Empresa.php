@@ -15,11 +15,11 @@ class Empresa extends Model
     use TemPesquisa;
     use SalvaEmMaiusculo;
 
-    protected   $table              = 'Empresas';
-    protected   $primaryKey         = 'EmpresaID';
-    public      $incrementing       = true;
-    protected   $dateFormat         = 'Y-m-d H:i:s';
-    public      $timestamps         = false;
+    protected $table              = 'Empresas';
+    protected $primaryKey         = 'EmpresaID';
+    public $incrementing       = true;
+    protected $dateFormat         = 'Y-m-d H:i:s';
+    public $timestamps         = false;
 
     protected $fillable = [
         'CNPJ',
@@ -54,13 +54,18 @@ class Empresa extends Model
 
     public function getCnpjFormatadoAttribute(): ?string
     {
-        $v = preg_replace('/\D/', '', $this->CNPJ);
+        if (empty($this->CNPJ)) {
+            return null;
+        }
+
+        $v = strtoupper(preg_replace('/[^A-Za-z0-9]/', '', $this->CNPJ));
+
         if (strlen($v) !== 14) {
             return $this->CNPJ;
         }
 
         return preg_replace(
-            '/(\d{2})(\d{3})(\d{3})(\d{4})(\d{2})/',
+            '/^([A-Z0-9]{2})([A-Z0-9]{3})([A-Z0-9]{3})([A-Z0-9]{4})(\d{2})$/',
             '$1.$2.$3/$4-$5',
             $v
         );

@@ -5,6 +5,7 @@ namespace App\Livewire\Empresa;
 use App\Models\Empresa;
 use Illuminate\Support\Facades\Http;
 use Livewire\Form as BaseForm;
+use App\Rules\CnpjRule;
 
 class Form extends BaseForm
 {
@@ -37,7 +38,7 @@ class Form extends BaseForm
     public function rules(): array
     {
         return [
-            'cnpj'        => ['nullable', 'min:14', 'max:19'],
+            'cnpj'        => ['nullable', new CnpjRule()],
             'razaoSocial' => ['required', 'min:3', 'max:255'],
             'cep'         => ['nullable', 'min:8', 'max:9'],
             'endereco'    => ['nullable', 'min:3', 'max:255'],
@@ -57,17 +58,17 @@ class Form extends BaseForm
         $this->empresa = $empresa;
 
         $this->cnpj        = $this->formatarCnpj($empresa->CNPJ);
-        $this->razaoSocial = $empresa->RazaoSocial;
+        $this->razaoSocial = $empresa->RazaoSocial ?? '';
         $this->cep         = $this->formatarCep($empresa->CEP);
-        $this->endereco    = $empresa->Endereco;
-        $this->numero      = $empresa->Numero;
-        $this->complemento = $empresa->Complemento;
-        $this->bairro      = $empresa->Bairro;
-        $this->cidade      = $empresa->Cidade;
-        $this->estado      = $empresa->Estado;
+        $this->endereco    = $empresa->Endereco ?? '';
+        $this->numero      = $empresa->Numero ?? '';
+        $this->complemento = $empresa->Complemento ?? '';
+        $this->bairro      = $empresa->Bairro ?? '';
+        $this->cidade      = $empresa->Cidade ?? '';
+        $this->estado      = $empresa->Estado ?? '';
         $this->telefone    = $this->formatarTelefone($empresa->Telefone);
-        $this->email       = $empresa->Email;
-        $this->ativo       = $empresa->Ativo;
+        $this->email       = $empresa->Email ?? '';
+        $this->ativo       = $empresa->Ativo ?? '';
     }
 
     public function criar(): void
@@ -75,7 +76,7 @@ class Form extends BaseForm
         $this->validate();
 
         Empresa::create([
-            'CNPJ'        => preg_replace('/[^0-9]/', '', $this->cnpj),
+            'CNPJ'        => CnpjRule::normalizar($this->cnpj),
             'RazaoSocial' => $this->razaoSocial,
             'CEP'         => preg_replace('/[^0-9]/', '', $this->cep),
             'Endereco'    => $this->endereco,
@@ -96,7 +97,7 @@ class Form extends BaseForm
     {
         $this->validate();
 
-        $this->empresa->CNPJ        = preg_replace('/[^0-9]/', '', $this->cnpj);
+        $this->empresa->CNPJ        = CnpjRule::normalizar($this->cnpj);
         $this->empresa->RazaoSocial = $this->razaoSocial;
         $this->empresa->CEP         = preg_replace('/[^0-9]/', '', $this->cep);
         $this->empresa->Endereco    = $this->endereco;
@@ -140,33 +141,54 @@ class Form extends BaseForm
         }
     }
 
-    private function formatarCnpj(string $cnpj): string
+    private function formatarCnpj(?string $cnpj): string
     {
-        $v = preg_replace('/\D/', '', $cnpj);
+        if (empty($cnpj)) {
+            return '';
+        }
+
+        $v = strtoupper(preg_replace('/[^A-Za-z0-9]/', '', $cnpj));
+
+        if (strlen($v) !== 14) {
+            return $cnpj;
+        }
+
         return preg_replace(
-            '/(\d{2})(\d{3})(\d{3})(\d{4})(\d{2})/',
+            '/^([A-Z0-9]{2})([A-Z0-9]{3})([A-Z0-9]{3})([A-Z0-9]{4})(\d{2})$/',
             '$1.$2.$3/$4-$5',
             $v
         );
     }
 
-    private function formatarTelefone(string $telefone): string
+    private function formatarTelefone(?string $telefone): string
     {
+        if (empty($telefone)) {
+            return '';
+        }
+        
         $v = preg_replace('/\D/', '', $telefone);
+
         if (strlen($v) === 11) {
             return preg_replace('/(\d{2})(\d{5})(\d{4})/', '($1) $2-$3', $v);
         } elseif (strlen($v) === 10) {
             return preg_replace('/(\d{2})(\d{4})(\d{4})/', '($1) $2-$3', $v);
         }
+
         return $telefone;
     }
 
-    private function formatarCep(string $cep): string
+    private function formatarCep(?string $cep): string
     {
+        if (empty($cep)) {
+            return '';
+        }
+
         $v = preg_replace('/\D/', '', $cep);
+
         if (strlen($v) > 5) {
             return preg_replace('/(\d{5})(\d{0,3})/', '$1-$2', $v);
         }
+
         return $v;
     }
 }

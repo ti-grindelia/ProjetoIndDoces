@@ -1,34 +1,34 @@
 <x-modal wire:model="modal" title="Atualizar empresa" separator class="backdrop-blur" box-class="min-w-3xl">
     <x-form wire:submit="salvar" id="atualizar-empresa-form">
-        <div class="flex flex-row space-x-4 mb-2 w-full">
+        <div class="mb-2 flex w-full flex-row space-x-4">
             <div class="w-1/3">
-                <x-input label="CNPJ" wire:model="form.cnpj"
-                    x-data
+                <x-input label="CNPJ" wire:model="form.cnpj" x-data
                     x-on:input="
-                        let v = $el.value.replace(/\D/g, '');
+                        let v = $el.value.toUpperCase().replace(/[^A-Z0-9]/g, '');
+
                         if (v.length > 14) v = v.slice(0, 14);
+
                         if (v.length > 12) {
-                            v = v.replace(/(\d{2})(\d{3})(\d{3})(\d{4})(\d{0,2})/, '$1.$2.$3/$4-$5');
+                            v = v.replace(/^([A-Z0-9]{2})([A-Z0-9]{3})([A-Z0-9]{3})([A-Z0-9]{4})(\d{0,2})$/, '$1.$2.$3/$4-$5');
                         } else if (v.length > 8) {
-                            v = v.replace(/(\d{2})(\d{3})(\d{3})(\d{0,4})/, '$1.$2.$3/$4');
+                            v = v.replace(/^([A-Z0-9]{2})([A-Z0-9]{3})([A-Z0-9]{3})([A-Z0-9]{0,4})$/, '$1.$2.$3/$4');
                         } else if (v.length > 5) {
-                            v = v.replace(/(\d{2})(\d{3})(\d{0,3})/, '$1.$2.$3');
+                            v = v.replace(/^([A-Z0-9]{2})([A-Z0-9]{3})([A-Z0-9]{0,3})$/, '$1.$2.$3');
                         } else if (v.length > 2) {
-                            v = v.replace(/(\d{2})(\d{0,3})/, '$1.$2');
+                            v = v.replace(/^([A-Z0-9]{2})([A-Z0-9]{0,3})$/, '$1.$2');
                         }
+
                         $el.value = v;
-                    "
-                />
+                    " />
             </div>
             <div class="flex-1">
-                <x-input label="Razão Social" wire:model="form.razaoSocial" class="w-full"/>
+                <x-input label="Razão Social" wire:model="form.razaoSocial" class="w-full" />
             </div>
         </div>
 
-        <div class="flex flex-row space-x-4 mb-2">
+        <div class="mb-2 flex flex-row space-x-4">
             <div class="w-1/3">
-                <x-input label="Telefone" wire:model.lazy="form.telefone"
-                    x-data
+                <x-input label="Telefone" wire:model.lazy="form.telefone" x-data
                     x-on:input="
                         let v = $el.value.replace(/\D/g, '');
                         if (v.length > 11) v = v.slice(0, 11);
@@ -43,57 +43,54 @@
                             v = v.replace(/(\d{2})(\d{5})(\d{0,4})/, '($1) $2-$3');
                         }
                         $el.value = v;
-                    "
-                />
+                    " />
             </div>
             <div class="flex-1">
-                <x-input label="E-mail" wire:model="form.email" class="w-full"/>
+                <x-input label="E-mail" wire:model="form.email" class="w-full" />
             </div>
         </div>
 
         <div class="w-1/3">
-            <x-input label="CEP" wire:model.lazy="form.cep" wire:blur="buscarCEP"
-                x-data
+            <x-input label="CEP" wire:model.lazy="form.cep" wire:blur="buscarCEP" x-data
                 x-on:input="
                     let v = $el.value.replace(/\D/g, '');
                     if (v.length > 5) v = v.slice(0, 5) + '-' + v.slice(5, 8);
                     $el.value = v;
-                "
-            />
+                " />
         </div>
 
-        <div class="flex flex-row space-x-4 mb-2">
+        <div class="mb-2 flex flex-row space-x-4">
             <div class="w-2/3">
-                <x-input label="Endereço" wire:model="form.endereco"/>
+                <x-input label="Endereço" wire:model="form.endereco" />
             </div>
             <div class="flex-1">
-                <x-input label="Número" wire:model="form.numero"/>
+                <x-input label="Número" wire:model="form.numero" />
             </div>
         </div>
 
-        <div class="flex flex-row space-x-4 mb-2">
+        <div class="mb-2 flex flex-row space-x-4">
             <div class="w-1/2">
-                <x-input label="Complemento" wire:model="form.complemento"/>
+                <x-input label="Complemento" wire:model="form.complemento" />
             </div>
             <div class="flex-1">
-                <x-input label="Bairro" wire:model="form.bairro"/>
+                <x-input label="Bairro" wire:model="form.bairro" />
             </div>
         </div>
 
-        <div class="flex flex-row space-x-4 mb-2">
+        <div class="mb-2 flex flex-row space-x-4">
             <div class="w-1/2">
-                <x-input label="Cidade" wire:model="form.cidade"/>
+                <x-input label="Cidade" wire:model="form.cidade" />
             </div>
             <div class="flex-1">
-                <x-input label="Estado" wire:model="form.estado"/>
+                <x-input label="Estado" wire:model="form.estado" />
             </div>
         </div>
 
-        <x-checkbox label="Ativo" wire:model="form.ativo" class="checkbox-info" tight/>
+        <x-checkbox label="Ativo" wire:model="form.ativo" class="checkbox-info" tight />
 
         <x-slot:actions>
-            <x-button label="Cancelar" @click="$wire.modal = false"/>
-            <x-button label="Salvar" type="submit" class="bg-blue-600 text-white" form="atualizar-empresa-form"/>
+            <x-button label="Cancelar" @click="$wire.modal = false" />
+            <x-button label="Salvar" type="submit" class="bg-blue-600 text-white" form="atualizar-empresa-form" />
         </x-slot:actions>
     </x-form>
 </x-modal>
