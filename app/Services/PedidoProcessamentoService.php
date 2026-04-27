@@ -19,23 +19,28 @@ class PedidoProcessamentoService
         $this->resetarListas();
 
         $produtos = $this->buscarProdutos();
+        $produtosPorDescricao = $produtos->keyBy(
+    fn ($p) => strtoupper(trim($p->Descricao))
+        );
         $linhas = $this->carregarLinhasExcel($arquivo);
 
         foreach ($linhas as $linha) {
             $codigo = $this->extrairCodigo($linha);
-            if (!$codigo || !$produtos->has($codigo)) continue;
+            if (!$codigo || !$produtos->has($codigo)) {
+                continue;
+            }
 
             $quantidade = $this->extrairQuantidade($linha);
-            if (!$quantidade) continue;
+            if (!$quantidade) {
+                continue;
+            }
 
             $produto = $produtos[$codigo];
             $normalizado = $this->normalizarProduto($produto, $quantidade);
             $descricaoBase = $normalizado['descricao_base'];
             $quantidadeFinal = $normalizado['quantidade'];
 
-            $produtoBase = $produtos->first(
-                fn($p) => strtoupper(trim($p->Descricao)) === strtoupper(trim($descricaoBase))
-            ) ?? $produto;
+            $produtoBase = $produtosPorDescricao[$descricaoBase] ?? $produto;
 
             $chave = $produtoBase->ProdutoID;
 
@@ -49,8 +54,8 @@ class PedidoProcessamentoService
 
         foreach ($this->produtosProcessados as &$produto) {
             $produto['MateriasPrimas'] = $this->calcularMateriasProduto(
-                Produto::find($produto['ProdutoID']),
-                $produto['Quantidade']
+            $produto['model'],
+            $produto['Quantidade']
             );
 
             foreach ($produto['MateriasPrimas'] as $mp) {
@@ -117,8 +122,12 @@ class PedidoProcessamentoService
 
     private function extrairCodigo($linha): ?string
     {
-        if (!isset($linha[0])) return null;
-        if (!is_numeric($linha[0])) return null;
+        if (!isset($linha[0])) {
+            return null;
+        }
+        if (!is_numeric($linha[0])) {
+            return null;
+        }
 
         return trim((string) $linha[0]);
     }
@@ -155,6 +164,7 @@ class PedidoProcessamentoService
     private function montarProdutoProcessado($produto, float $quantidade): array
     {
         return [
+            'model'      => $produto,
             'ProdutoID'  => $produto->ProdutoID,
             'Codigo'     => $produto->CodigoAlternativo,
             'Descricao'  => $produto->Descricao,
@@ -166,7 +176,11 @@ class PedidoProcessamentoService
 
     private function calcularMateriasProduto($produto, float $quantidade): array
     {
-        $rendimento = $produto->RendimentoProducao ?: 1;
+        $rendimento = (float)$produto->RendimentoProducao;
+        if ($rendimento <= 0) {
+            $rendimento = 1;
+        }
+
         $fator = $quantidade / $rendimento;
 
         $materias = [];
@@ -175,7 +189,10 @@ class PedidoProcessamentoService
             $quantBase = $mp->pivot->Quantidade * $fator;
 
             if ($mp->composicoes->isNotEmpty()) {
-                $rendimentoComp = $mp->Rendimento ?: 1;
+                $rendimentoComp = (float) $mp->Rendimento;
+                if ($rendimentoComp <= 0) {
+                    $rendimentoComp = 1;
+                }
 
                 foreach ($mp->composicoes as $filha) {
                     $total = ($filha->pivot->Quantidade / $rendimentoComp) * $quantBase;
