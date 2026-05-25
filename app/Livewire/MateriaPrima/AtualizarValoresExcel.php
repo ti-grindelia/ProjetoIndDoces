@@ -58,8 +58,6 @@ class AtualizarValoresExcel extends Component
         cache()->forget('importacao_mp_finalizada');
 
         ProcessarMateriasPrimasExcelJob::dispatch($arquivoPath);
-
-        $this->reset('arquivo');
     }
 
     public function verificarImportacao(): void

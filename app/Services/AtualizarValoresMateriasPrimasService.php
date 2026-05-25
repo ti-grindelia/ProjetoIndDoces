@@ -27,34 +27,36 @@ class AtualizarValoresMateriasPrimasService
             ->get()
             ->keyBy('CodigoAlternativo');
 
-        Excel::import(new class($materias) implements OnEachRow, WithChunkReading {
-            private $materias;
-
-            public function __construct($materias)
-            {
-                $this->materias = $materias;
-            }
+        Excel::import(new class implements OnEachRow, WithChunkReading {
 
             public function onRow(Row $row): void
             {
                 $linha = $row->toArray();
 
-                $codRef = trim((string) ($linha[0] ?? ''));
-                $custo  = $linha[2] ?? null;
+                $codRef = preg_replace('/[^0-9]/', '', (string) ($linha[0] ?? ''));
+                $custo  = trim((string) ($linha[2] ?? ''));
 
                 if (!$codRef || !$custo) {
                     return;
                 }
 
-                $materiaPrima = $this->materias[$codRef] ?? null;
+                $valor = str_replace('.', '', $custo);
+                $valor = str_replace(',', '.', $valor);
+
+                dd($codRef);
+
+                $materiaPrima = MateriaPrima::where('CodigoAlternativo', $codRef)->first();
 
                 if (!$materiaPrima) {
+                    Log::warning("Matéria não encontrada: {$codRef}");
                     return;
                 }
 
-                $materiaPrima->PrecoCompra = (float) str_replace(',', '.', $custo);
+                $materiaPrima->update([
+                    'PrecoCompra' => (float) $valor
+                ]);
 
-                $materiaPrima->save();
+                Log::info("Atualizado {$codRef} => {$valor}");
             }
 
             public function chunkSize(): int
