@@ -65,6 +65,9 @@ class PedidoListarMateriasService
     private function calcularMateriasProduto($produto, float $quantidade): array
     {
         $rendimento = $produto->RendimentoProducao ?: 1;
+        if ($rendimento === 0){
+            $rendimento = 1;
+        }
         $fator = $quantidade / $rendimento;
 
         $materias = [];
