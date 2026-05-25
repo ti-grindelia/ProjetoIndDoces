@@ -21,7 +21,7 @@
         </div>
 
         @if ($processando)
-            <div wire:poll.2s="verificarImportacao" class="mt-2 text-sm text-gray-500">
+            <div wire:poll.5s="verificarImportacao" class="mt-2 text-sm text-gray-500">
                 Processando valores...
             </div>
         @endif

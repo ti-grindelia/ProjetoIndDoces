@@ -2,7 +2,6 @@
 
 namespace App\Jobs;
 
-use App\Events\ImportacaoValoresMateriasPrimasFinalizada;
 use App\Services\AtualizarValoresMateriasPrimasService;
 use Exception;
 use Illuminate\Bus\Queueable;
@@ -11,7 +10,8 @@ use Illuminate\Foundation\Bus\Dispatchable;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Queue\SerializesModels;
 use Illuminate\Support\Facades\Cache;
-use Illuminate\Support\Facades\Storage;
+use Log;
+use Throwable;
 
 class ProcessarMateriasPrimasExcelJob implements ShouldQueue
 {
@@ -33,13 +33,17 @@ class ProcessarMateriasPrimasExcelJob implements ShouldQueue
      */
     public function handle(): void
     {
-        if (!file_exists($this->arquivoPath)) {
-            \Illuminate\Log\log()->error("Arquivo não encontrado: $this->arquivoPath");
-            return;
+        try {
+            if (!file_exists($this->arquivoPath)) {
+                \Illuminate\Log\log()->error("Arquivo não encontrado: $this->arquivoPath");
+                return;
+            }
+
+            new AtualizarValoresMateriasPrimasService()->processar($this->arquivoPath);
+        } catch (Throwable $e) {
+            Log::error($e->getMessage());
+        } finally {
+            Cache::put('importacao_mp_finalizada', true, now()->addMinutes(10));
         }
-
-        new AtualizarValoresMateriasPrimasService()->processar($this->arquivoPath);
-
-        Cache::put('importacao_mp_finalizada', true, now()->addMinutes(10));
     }
 }

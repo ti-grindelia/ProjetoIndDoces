@@ -23,27 +23,38 @@ class AtualizarValoresMateriasPrimasService
             throw new Exception("Arquivo não encontrado: $arquivoPath");
         }
 
-        Excel::import(new class implements OnEachRow, WithChunkReading {
+        $materias = MateriaPrima::query()
+            ->get()
+            ->keyBy('CodigoAlternativo');
+
+        Excel::import(new class($materias) implements OnEachRow, WithChunkReading {
+            private $materias;
+
+            public function __construct($materias)
+            {
+                $this->materias = $materias;
+            }
+
             public function onRow(Row $row): void
             {
                 $linha = $row->toArray();
 
-                $codRef = $linha[0] ?? null;
+                $codRef = trim((string) ($linha[0] ?? ''));
                 $custo  = $linha[2] ?? null;
 
                 if (!$codRef || !$custo) {
                     return;
                 }
 
-                $materiaPrima = MateriaPrima::where('CodigoAlternativo', $codRef)->first();
+                $materiaPrima = $this->materias[$codRef] ?? null;
 
                 if (!$materiaPrima) {
                     return;
                 }
 
-                $materiaPrima->update([
-                    'PrecoCompra' => (float) str_replace(',', '.', $custo)
-                ]);
+                $materiaPrima->PrecoCompra = (float) str_replace(',', '.', $custo);
+
+                $materiaPrima->save();
             }
 
             public function chunkSize(): int
