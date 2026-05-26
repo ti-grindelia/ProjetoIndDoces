@@ -67,7 +67,7 @@ class PedidoPdfController extends Controller
 
         $totais = [
             'qtde' => collect($dados['itens'])->sum('Quantidade'),
-            'custoInd' => collect($dados['itens'])->sum(fn($i) => $i['Produto']['CustoIndustrializacao']),
+            'custoInd' => collect($dados['itens'])->sum(fn($i) => $i['Produto']['CustoIndustrializacao'])
         ];
 
         $user = Usuario::find($pedido->UsuarioID);

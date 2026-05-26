@@ -64,8 +64,8 @@ class PedidoListarMateriasService
 
     private function calcularMateriasProduto($produto, float $quantidade): array
     {
-        $rendimento = $produto->RendimentoProducao ?: 1;
-        if ($rendimento === 0){
+        $rendimento = (float) $produto->RendimentoProducao ?: 1;
+        if ($rendimento <= 0){
             $rendimento = 1;
         }
         $fator = $quantidade / $rendimento;
@@ -76,7 +76,7 @@ class PedidoListarMateriasService
             $quantBase = $mp->pivot->Quantidade * $fator;
 
             if ($mp->composicoes->isNotEmpty()) {
-                $rendimentoComp = $mp->Rendimento ?: 1;
+                $rendimentoComp = (float) $mp->Rendimento ?: 1;
 
                 foreach ($mp->composicoes as $filha) {
                     $total = ($filha->pivot->Quantidade / $rendimentoComp) * $quantBase;

@@ -154,6 +154,7 @@
                 <td class="text-right">
                     {{ number_format($totais['custoInd'], 2, ',', '.') }}
                 </td>
+                <td class="text-right"></td>
             </tr>
         </tbody>
     </table>
