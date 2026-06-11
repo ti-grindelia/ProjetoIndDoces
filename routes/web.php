@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\PedidoExcelController;
 use App\Http\Controllers\PedidoPdfController;
 use App\Livewire\Autenticacao\Login;
 use App\Livewire\Autenticacao\Registro;
@@ -29,4 +30,9 @@ Route::middleware(['auth'])->group(function () {
     Route::get('/pedidoReceita/{pedido}/pdf', [PedidoPdfController::class, 'imprimirPedidoReceita'])->name('pedidoReceita.pdf');
     Route::get('/pedidoSemReceita/{pedido}/pdf', [PedidoPdfController::class, 'imprimirPedidoSemReceita'])->name('pedidoSemReceita.pdf');
     Route::get('/pedidoSimples/{pedido}/pdf', [PedidoPdfController::class, 'imprimirPedidoSimples'])->name('pedidoSimples.pdf');
+
+    Route::get('/materia/{pedido}/excel', [PedidoExcelController::class, 'exportarMateria'])->name('materia.excel');
+    Route::get('/pedidoReceita/{pedido}/excel', [PedidoExcelController::class, 'exportarPedidoReceita'])->name('pedidoReceita.excel');
+    Route::get('/pedidoSemReceita/{pedido}/excel', [PedidoExcelController::class, 'exportarPedidoSemReceita'])->name('pedidoSemReceita.excel');
+    Route::get('/pedidoSimples/{pedido}/excel', [PedidoExcelController::class, 'exportarPedidoSimples'])->name('pedidoSimples.excel');
 });

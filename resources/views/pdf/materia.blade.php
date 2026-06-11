@@ -114,6 +114,7 @@
             <tr>
                 <th>#</th>
                 <th>Matéria-prima</th>
+                <th>Valor</th>
                 <th class="text-right">Quantidade</th>
                 <th>Un</th>
             </tr>
@@ -126,6 +127,9 @@
                 <tr>
                     <td>{{ $mp['CodigoAlternativo'] }}</td>
                     <td>{{ $mp['Descricao'] }}</td>
+                    <td>
+                        R$ {{ number_format($mp['PrecoCompra'], 2, ',', '.') }}
+                    </td>
                     <td class="text-right">
                         {{ number_format($mp['Quantidade'], 3) }}
                     </td>

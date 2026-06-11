@@ -14,6 +14,7 @@
         <x-slot:actions>
             <x-button label="Cancelar" @click="$wire.modal = false"/>
             <x-button label="Imprimir" type="submit" class="bg-blue-600 text-white" form="impressoes-pedido-form" spinner="imprimir"/>
+            <x-button label="Exportar Excel" wire:click="exportar" class="bg-green-600 text-white" spinner="exportar"/>
         </x-slot:actions>
     </x-form>
 </x-modal>

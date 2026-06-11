@@ -6,10 +6,11 @@ use App\Models\Pedido;
 use App\Models\Usuario;
 use App\Services\PedidoListarMateriasService;
 use Barryvdh\DomPDF\Facade\Pdf;
+use Illuminate\Http\Response;
 
 class PedidoPdfController extends Controller
 {
-    public function imprimirMateria(Pedido $pedido)
+    public function imprimirMateria(Pedido $pedido): Response
     {
         $dados = app(PedidoListarMateriasService::class)->calcular($pedido);
 
@@ -24,7 +25,7 @@ class PedidoPdfController extends Controller
         return $pdf->stream("pedido-$pedido->PedidoID.pdf");
     }
 
-    public function imprimirPedidoReceita(Pedido $pedido)
+    public function imprimirPedidoReceita(Pedido $pedido): Response
     {
         $dados = app(PedidoListarMateriasService::class)->calcular($pedido);
 
@@ -43,7 +44,7 @@ class PedidoPdfController extends Controller
         return $pdf->stream("pedido-$pedido->PedidoID.pdf");
     }
 
-    public function imprimirPedidoSemReceita(Pedido $pedido)
+    public function imprimirPedidoSemReceita(Pedido $pedido): Response
     {
         $dados = app(PedidoListarMateriasService::class)->calcular($pedido);
 
@@ -61,7 +62,7 @@ class PedidoPdfController extends Controller
         return $pdf->stream("pedido-$pedido->PedidoID.pdf");
     }
 
-    public function imprimirPedidoSimples(Pedido $pedido)
+    public function imprimirPedidoSimples(Pedido $pedido): Response
     {
         $dados = app(PedidoListarMateriasService::class)->calcular($pedido);
 

@@ -29,18 +29,26 @@ class Impressoes extends Component
 
     public function imprimir(): void
     {
-        $url = '';
-
-        if ($this->impressao === 'materiasPrimas') {
-            $url = route('materia.pdf', $this->pedidoID);
-        } else if ($this->impressao === 'produtosComReceita') {
-            $url = route('pedidoReceita.pdf', $this->pedidoID);
-        } else if ($this->impressao === 'produtosSemReceita') {
-            $url = route('pedidoSemReceita.pdf', $this->pedidoID);
-        } else if ($this->impressao === 'produtosSimples') {
-            $url = route('pedidoSimples.pdf', $this->pedidoID);
-        }
+        $url = $this->getRoute('pdf');
 
         $this->dispatch('abrirNovaGuia', url: $url);
+    }
+
+    public function exportar(): void
+    {
+        $url = $this->getRoute('excel');
+
+        $this->dispatch('abrirNovaGuia', url: $url);
+    }
+
+    private function getRoute(string $formato): string
+    {
+        return match ($this->impressao) {
+            'materiasPrimas' => route("materia.$formato", $this->pedidoID),
+            'produtosComReceita' => route("pedidoReceita.$formato", $this->pedidoID),
+            'produtosSemReceita' => route("pedidoSemReceita.$formato", $this->pedidoID),
+            'produtosSimples' => route("pedidoSimples.$formato", $this->pedidoID),
+            default => '',
+        };
     }
 }
