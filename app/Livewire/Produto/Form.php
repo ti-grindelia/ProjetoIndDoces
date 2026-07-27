@@ -59,7 +59,7 @@ class Form extends BaseForm
             'preco'              => ['required', 'min:0', 'numeric'],
             'custoMedio'         => ['nullable', 'min:0', 'numeric'],
             'pesoUnidade'        => ['nullable', 'min:0', 'numeric'],
-            'rendimentoProducao' => ['nullable', 'min:0', 'numeric'],
+            'rendimentoProducao' => ['required', 'numeric', 'gt:0'],
             'empresa'            => ['nullable', 'integer', 'exists:Empresas,EmpresaID'],
             'fracionado'         => ['boolean'],
             'ativo'              => ['boolean'],
@@ -134,6 +134,15 @@ class Form extends BaseForm
     public function atualizar(): void
     {
         $this->validate();
+
+        if ($this->rendimentoProducao <= 0) {
+            $this->addError(
+                'rendimentoProducao',
+                'Informe um rendimento de produção maior que zero.'
+            );
+
+            return;
+        }
 
         $this->recalcularCustoTotal();
         $this->recalcularMVA();

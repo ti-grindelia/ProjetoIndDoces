@@ -74,7 +74,7 @@ class ProdutoMateriaPrimaService
 
             foreach ($materias as $m) {
                 $custoUnitario = $this->normalizarNumero($m['CustoUnitario']);
-                $custo = $this->normalizarNumero($m['Custo']);
+                $custo = $this->normalizarNumero(($m['Quantidade'] ?? 0) * ($m['CustoUnitario'] ?? 0));
 
                 ProdutoMateriaPrima::query()->updateOrCreate(
                     [
@@ -90,8 +90,35 @@ class ProdutoMateriaPrimaService
                 );
             }
 
-            $custoMedio = $this->normalizarNumero($custoTotal / $produto->RendimentoProducao);
-            $produto->update(['CustoMedio' => $custoMedio]);
+            $produto->refresh();
+
+            $rendimento = (float) $produto->RendimentoProducao;
+            $custoIndustrializacao = (float) ($produto->CustoIndustrializacao ?? 0);
+            $custoMateriaPrima = $this->normalizarNumero($custoTotal);
+            $custoTotalCalculado = $this->normalizarNumero($custoMateriaPrima + $custoIndustrializacao);
+            $custoMedio = $rendimento > 0
+                ? $this->normalizarNumero($custoTotalCalculado / $rendimento)
+                : 0;
+
+            $mvaPercentual = (float) ($produto->MVAPercentual ?? 0);
+            $icmsPercentual = (float) ($produto->ICMSPercentual ?? 0);
+
+            $valorMVA = $mvaPercentual > 0
+                ? $this->normalizarNumero($custoTotalCalculado * $mvaPercentual / 100)
+                : 0;
+
+            $baseST = $this->normalizarNumero($custoTotalCalculado + $valorMVA);
+            $valorICMS = $icmsPercentual > 0
+                ? $this->normalizarNumero($baseST * $icmsPercentual / 100)
+                : 0;
+
+            $produto->update([
+                'CustoMateriaPrima' => $custoMateriaPrima,
+                'CustoTotal' => $custoTotalCalculado,
+                'CustoMedio' => $custoMedio,
+                'ValorMVA' => $valorMVA,
+                'ValorICMS' => $valorICMS,
+            ]);
             DB::commit();
         } catch (Throwable $e) {
             DB::rollBack();
